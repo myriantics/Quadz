@@ -1,10 +1,14 @@
 package dev.lazurite.quadz.common.networking;
 
 import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
+import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
+import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.util.Search;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -17,22 +21,20 @@ import java.util.Optional;
 
 public abstract class QuadzServerPlayNetworkHandler {
 
-    public static void onJoystickInput(MinecraftServer minecraftServer, ServerPlayer serverPlayer, ServerGamePacketListenerImpl serverGamePacketListener, FriendlyByteBuf buf, PacketSender packetSender) {
-        int axisCount = buf.readInt();
-
-        for (int i = 0; i < axisCount; i++) {
-            ResourceLocation axis = buf.readResourceLocation();
-            float value = buf.readFloat();
-            serverPlayer.quadz$setJoystickValue(axis, value);
+    public static void onJoystickInput(JoystickInputC2SPacket packet, ServerPlayNetworking.Context context) {
+        for (ResourceLocation id : packet.values().keySet()) {
+            context.player().quadz$setJoystickValue(id, packet.values().get(id));
         }
     }
 
-    public static void onPlayerViewRequestReceived(MinecraftServer minecraftServer, ServerPlayer serverPlayer, ServerGamePacketListenerImpl serverGamePacketListener, FriendlyByteBuf buf, PacketSender packetSender) {
+    public static void onPlayerViewRequestReceived(RequestPlayerViewC2SPacket packet, ServerPlayNetworking.Context context) {
+        ServerPlayer serverPlayer = context.player();
         Optional.ofNullable(serverPlayer.getServer()).ifPresent(server -> server.execute(() -> serverPlayer.setCamera(serverPlayer)));
     }
 
-    public static void onQuadcopterViewRequested(MinecraftServer minecraftServer, ServerPlayer serverPlayer, ServerGamePacketListenerImpl serverGamePacketListener, FriendlyByteBuf buf, PacketSender packetSender) {
-        int spectateDirection = buf.readInt();
+    public static void onQuadcopterViewRequested(RequestQuadcopterViewC2SPacket packet, ServerPlayNetworking.Context context) {
+        int spectateDirection = packet.clickType();
+        ServerPlayer serverPlayer = context.player();
 
         Optional.ofNullable(serverPlayer.getServer()).ifPresent(server -> {
             server.execute(() -> {

@@ -1,5 +1,6 @@
 package dev.lazurite.quadz.client;
 
+import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
 import dev.lazurite.quadz.client.render.entity.QuadcopterEntityRenderer;
 import dev.lazurite.quadz.common.registry.QuadzEntityTypes;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
@@ -70,6 +71,9 @@ public class QuadzClient implements ClientModInitializer {
         QuadzEvents.JOYSTICK_DISCONNECT.register(ClientEventHooks::onJoystickDisconnect);
         QuadzEvents.LEFT_CLICK_EVENT.register(ClientEventHooks::onLeftClick);
         QuadzEvents.RIGHT_CLICK_EVENT.register(ClientEventHooks::onRightClick);
+
+        // Networking
+        QuadzClientPlayNetworking.initS2CRecievers();
     }
 
 }

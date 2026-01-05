@@ -1,5 +1,6 @@
 package dev.lazurite.quadz.client.networking;
 
+import dev.lazurite.quadz.common.networking.s2c.JoystickInputS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -13,18 +14,11 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class QuadzClientPlayNetworkHandler {
-    public static void onJoystickInput(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf buf, PacketSender packetSender) {
-        UUID id = buf.readUUID();
-        int axisCount = buf.readInt();
-        Player player = Minecraft.getInstance().level.getPlayerByUUID(id);
-
-        if (player != null) {
-            for (int i = 0; i < axisCount; i++) {
-                ResourceLocation axis = buf.readResourceLocation();
-                float value = buf.readFloat();
-                player.quadz$setJoystickValue(axis, value);
+    public static void onJoystickInput(JoystickInputS2CPacket payload, ClientPlayNetworking.Context context) {
+        if (context.client().level != null && context.client().player == context.client().level.getEntity(payload.playerId())) {
+            for (ResourceLocation id : payload.values().keySet()) {
+                context.player().quadz$setJoystickValue(id, payload.values().get(id));
             }
         }
     }
-
 }

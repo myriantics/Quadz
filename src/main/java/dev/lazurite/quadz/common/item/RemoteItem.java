@@ -1,5 +1,7 @@
 package dev.lazurite.quadz.common.item;
 
+import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
 
 /**
@@ -9,7 +11,7 @@ import net.minecraft.world.item.Item;
 public class RemoteItem extends Item {
 
     public RemoteItem() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1).component(QuadzDataComponentTypes.BINDABLE, Unit.INSTANCE));
     }
 
 }

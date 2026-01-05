@@ -1,8 +1,9 @@
 package dev.lazurite.quadz;
 
-import dev.lazurite.quadz.common.registry.QuadzEntityTypes;
-import dev.lazurite.quadz.common.registry.QuadzItemGroups;
-import dev.lazurite.quadz.common.registry.QuadzItems;
+import dev.lazurite.quadz.common.registry.*;
+import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
+import dev.lazurite.quadz.common.registry.item.QuadzItemGroups;
+import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -19,8 +20,12 @@ public class QuadzCommon implements ModInitializer {
 
         // Registries
         QuadzEntityTypes.init();
+        QuadzEvents.init();
         QuadzItems.init();
         QuadzItemGroups.init();
+        QuadzPackets.init();
+        QuadzDamageTypes.init();
+        QuadzDataComponentTypes.init();
 
         // Events
         // TemplateEvents.ENTITY_TEMPLATE_CHANGED.register(ServerEventHooks::onEntityTemplateChanged);
@@ -32,12 +37,8 @@ public class QuadzCommon implements ModInitializer {
         LOGGER.info("Quadz has loaded!");
     }
 
-    public static class Networking {
-
-    }
-
     public static ResourceLocation locate(String name) {
-        return new ResourceLocation(MOD_ID, name);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
     }
 
 }

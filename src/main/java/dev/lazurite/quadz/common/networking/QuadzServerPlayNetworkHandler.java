@@ -2,7 +2,7 @@ package dev.lazurite.quadz.common.networking;
 
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
-import dev.lazurite.quadz.common.util.Bindable;
+import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.util.Search;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -42,21 +43,26 @@ public abstract class QuadzServerPlayNetworkHandler {
                     serverPlayer.setCamera(entity);
                     QuadzEvents.SWITCH_CAMERA_EVENT.invoker().onSwitchCamera(serverPlayer.getCamera(), entity);
                 } else {
-                    Bindable.get(serverPlayer.getMainHandItem()).ifPresent(bindable -> {
-                        Search.forQuadWithBindId(
-                                        serverPlayer.getLevel(),
-                                        serverPlayer.getCamera().position(),
-                                        bindable.getBindId(),
-                                        server.getPlayerList().getViewDistance() * 16)
-                                .ifPresentOrElse(entity -> {
-                                    serverPlayer.setCamera(entity);
-                                    QuadzEvents.SWITCH_CAMERA_EVENT.invoker().onSwitchCamera(serverPlayer.getCamera(), entity);
-                                }, () -> Search.forAllViewed(server).stream().findFirst().ifPresent(entity -> {
-                                    serverPlayer.setCamera(entity);
-                                    QuadzEvents.SWITCH_CAMERA_EVENT.invoker().onSwitchCamera(serverPlayer.getCamera(), entity);
-                                }));
-                    });
+                    ItemStack mainHandItem = serverPlayer.getMainHandItem();
 
+                    if (mainHandItem.has(QuadzDataComponentTypes.BINDABLE)) {
+                        int boundId = mainHandItem.getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1);
+
+                        if (boundId != -1) {
+                            Search.forQuadWithBindId(
+                                            serverPlayer.level(),
+                                            serverPlayer.getCamera().position(),
+                                            boundId,
+                                            server.getPlayerList().getViewDistance() * 16)
+                                    .ifPresentOrElse(entity -> {
+                                        serverPlayer.setCamera(entity);
+                                        QuadzEvents.SWITCH_CAMERA_EVENT.invoker().onSwitchCamera(serverPlayer.getCamera(), entity);
+                                    }, () -> Search.forAllViewed(server).stream().findFirst().ifPresent(entity -> {
+                                        serverPlayer.setCamera(entity);
+                                        QuadzEvents.SWITCH_CAMERA_EVENT.invoker().onSwitchCamera(serverPlayer.getCamera(), entity);
+                                    }));
+                        }
+                    }
                 }
             });
         });

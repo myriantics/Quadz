@@ -1,23 +1,18 @@
 package dev.lazurite.quadz.common.entity;
 
-import com.mojang.math.Axis;
 import dev.lazurite.quadz.QuadzCommon;
-import dev.lazurite.quadz.client.render.QuadcopterView;
-import dev.lazurite.quadz.common.registry.QuadzItems;
-import dev.lazurite.quadz.common.util.Bindable;
+import dev.lazurite.quadz.common.registry.QuadzDamageTypes;
+import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
+import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.common.item.GogglesItem;
 import dev.lazurite.quadz.common.item.RemoteItem;
 import dev.lazurite.quadz.common.util.BetaflightHelper;
-import dev.lazurite.quadz.common.util.Matrix4fHelper;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,20 +25,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BushBlock;
-import net.minecraft.world.level.block.VineBlock;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
-public class Quadcopter extends LivingEntity implements Bindable {
+public class Quadcopter extends LivingEntity {
 
-    public static final DamageSource PROP_DAMAGE = new DamageSource("quadcopter").setProjectile().damageHelmet();
     public static final EntityDataAccessor<String> TEMPLATE = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> PREV_TEMPLATE = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> ARMED = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.BOOLEAN);
@@ -59,7 +47,7 @@ public class Quadcopter extends LivingEntity implements Bindable {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             // Server-side only prioritization
             /*
             Optional.ofNullable(getRigidBody()).ifPresent(player -> {
@@ -79,8 +67,8 @@ public class Quadcopter extends LivingEntity implements Bindable {
              */
 
             // Hurt entities on collision
-            this.level.getEntities(this, this.getBoundingBox(), entity -> entity instanceof LivingEntity).forEach(entity -> {
-                entity.hurt(PROP_DAMAGE, 2.0f);
+            this.level().getEntities(this, this.getBoundingBox(), entity -> entity instanceof LivingEntity).forEach(entity -> {
+                entity.hurt(level().damageSources().source(QuadzDamageTypes.QUADCOPTER), 2.0f);
             });
         }
 
@@ -94,14 +82,14 @@ public class Quadcopter extends LivingEntity implements Bindable {
             }
              */
 
-            var pitch = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "pitch"));
-            var yaw = -1 * player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "yaw"));
-            var roll = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "roll"));
-            var throttle = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "throttle")) + 1.0f;
+            var pitch = player.quadz$getJoystickValue(QuadzCommon.locate("pitch"));
+            var yaw = -1 * player.quadz$getJoystickValue(QuadzCommon.locate("yaw"));
+            var roll = player.quadz$getJoystickValue(QuadzCommon.locate("roll"));
+            var throttle = player.quadz$getJoystickValue(QuadzCommon.locate("throttle")) + 1.0f;
 
-            var rate = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "rate"));
-            var superRate = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "super_rate"));
-            var expo = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "expo"));
+            var rate = player.quadz$getJoystickValue(QuadzCommon.locate("rate"));
+            var superRate = player.quadz$getJoystickValue(QuadzCommon.locate("super_rate"));
+            var expo = player.quadz$getJoystickValue(QuadzCommon.locate("expo"));
 
             this.rotate(
                     (float) BetaflightHelper.calculateRates(pitch, rate, expo, superRate, 0.05f),
@@ -182,11 +170,14 @@ public class Quadcopter extends LivingEntity implements Bindable {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!level.isClientSide()) {
+        if (!level().isClientSide()) {
             final var stack = player.getInventory().getSelected();
 
             if (stack.getItem() instanceof RemoteItem) {
-                Bindable.get(stack).ifPresent(bindable -> Bindable.bind(this, bindable));
+
+                if (stack.has(QuadzDataComponentTypes.BINDABLE)) {
+                    this.setBindId(stack.getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1));
+                }
                 player.displayClientMessage(Component.translatable("quadz.message.bound"), true);
             }
         }
@@ -197,14 +188,14 @@ public class Quadcopter extends LivingEntity implements Bindable {
     @Override
     public void kill() {
         var itemStack = new ItemStack(QuadzItems.QUADCOPTER_ITEM);
-        Bindable.get(itemStack).ifPresent(bindable -> bindable.copyFrom(this));
+        itemStack.set(QuadzDataComponentTypes.BOUND_ID, this.getBindId());
         this.spawnAtLocation(itemStack);
         this.remove(RemovalReason.KILLED);
     }
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
-        if (!level.isClientSide() && source.getEntity() instanceof ServerPlayer) {
+        if (!level().isClientSide() && source.getEntity() instanceof ServerPlayer) {
             this.kill();
             return true;
         }
@@ -228,19 +219,14 @@ public class Quadcopter extends LivingEntity implements Bindable {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(TEMPLATE, "");
-        getEntityData().define(PREV_TEMPLATE, "");
-        getEntityData().define(ARMED, false);
-        getEntityData().define(BIND_ID, 0);
-        getEntityData().define(CAMERA_ANGLE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TEMPLATE, "");
+        builder.define(PREV_TEMPLATE, "");
+        builder.define(ARMED, false);
+        builder.define(BIND_ID, 0);
+        builder.define(CAMERA_ANGLE, 0);
     }
-
-//    @Override
-//    public boolean shouldRenderPlayer() {
-//        return true;
-//    }
 
 //    @Override
     public boolean shouldPlayerBeViewing(Player player) {
@@ -277,12 +263,10 @@ public class Quadcopter extends LivingEntity implements Bindable {
         return null;
     }
 
-    @Override
     public void setBindId(int bindId) {
         this.getEntityData().set(BIND_ID, bindId);
     }
 
-    @Override
     public int getBindId() {
         return this.getEntityData().get(BIND_ID);
     }

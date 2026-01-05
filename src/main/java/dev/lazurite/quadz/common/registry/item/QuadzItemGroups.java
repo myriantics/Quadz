@@ -1,11 +1,12 @@
-package dev.lazurite.quadz.common.registry;
+package dev.lazurite.quadz.common.registry.item;
 
 import dev.lazurite.quadz.QuadzCommon;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,7 +16,7 @@ public abstract class QuadzItemGroups {
     public static final CreativeModeTab QUADZ = register("quadz", builder -> builder
             .title(Component.literal("Quadz"))
             .icon(() -> new ItemStack(QuadzItems.REMOTE_ITEM))
-            .displayItems((featureFlagSet, output, bl) -> {
+            .displayItems((parameters, output) -> {
                 output.accept(QuadzItems.GOGGLES_ITEM);
                 output.accept(QuadzItems.QUADCOPTER_ITEM);
                 output.accept(QuadzItems.REMOTE_ITEM);
@@ -27,10 +28,9 @@ public abstract class QuadzItemGroups {
     }
 
     private static CreativeModeTab register(String name, Consumer<CreativeModeTab.Builder> consumer) {
-        CreativeModeTab.Builder builder = FabricItemGroup.builder(QuadzCommon.locate(name));
+        ResourceKey<CreativeModeTab> key = ResourceKey.create(Registries.CREATIVE_MODE_TAB, QuadzCommon.locate(name));
+        CreativeModeTab.Builder builder = FabricItemGroup.builder();
         consumer.accept(builder);
-        CreativeModeTab itemGroup = builder.build();
-        ItemGroupEvents.modifyEntriesEvent(itemGroup);
-        return itemGroup;
+        return Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, key, builder.build());
     }
 }

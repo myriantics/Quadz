@@ -7,11 +7,10 @@ import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.util.Search;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class OnScreenDisplay extends GuiComponent {
+public class OnScreenDisplay {
 
     private final Quadcopter quadcopter;
     private final Font font;
@@ -35,10 +34,10 @@ public class OnScreenDisplay extends GuiComponent {
 
     public void renderSticks(PoseStack poseStack, float tickDelta) {
         Search.forPlayer(quadcopter).ifPresent(player -> {
-            var pitch = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "pitch"));
-            var yaw = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "yaw"));
-            var roll = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "roll"));
-            var throttle = (player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "throttle")) + 1.0f);
+            var pitch = player.quadz$getJoystickValue(QuadzCommon.locate("pitch"));
+            var yaw = player.quadz$getJoystickValue(QuadzCommon.locate("yaw"));
+            var roll = player.quadz$getJoystickValue(QuadzCommon.locate("roll"));
+            var throttle = (player.quadz$getJoystickValue(QuadzCommon.locate("throttle")) + 1.0f);
             var width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             var height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             renderSticks(poseStack, tickDelta, width / 2, height - 75, 25, 5, pitch, yaw, roll, throttle);
@@ -51,6 +50,7 @@ public class OnScreenDisplay extends GuiComponent {
         var topY = y + scale;
         var bottomY = y - scale;
 
+        /*
         // Draw crosses
         fill(poseStack, leftX, bottomY + 1, leftX + 1, topY, 0xFFFFFFFF);
         fill(poseStack, rightX, bottomY + 1, rightX + 1, topY, 0xFFFFFFFF);
@@ -65,6 +65,7 @@ public class OnScreenDisplay extends GuiComponent {
         int pitchAdjusted = (int) (pitch * scale);
         fill(poseStack, leftX + yawAdjusted - dotSize, y - throttleAdjusted - dotSize, leftX + yawAdjusted + dotSize, y - throttleAdjusted + dotSize, 0xFFFFFFFF);
         fill(poseStack, rightX + rollAdjusted - dotSize, y - pitchAdjusted - dotSize, rightX + rollAdjusted + dotSize, y - pitchAdjusted + dotSize, 0xFFFFFFFF);
+        */
     }
 
 }

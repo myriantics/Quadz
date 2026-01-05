@@ -1,10 +1,9 @@
 package dev.lazurite.quadz.client;
 
-import dev.lazurite.quadz.client.render.QuadcopterView;
 import dev.lazurite.quadz.client.render.entity.QuadcopterEntityRenderer;
 import dev.lazurite.quadz.common.registry.QuadzEntityTypes;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
-import dev.lazurite.quadz.common.util.Bindable;
+import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.client.event.ClientEventHooks;
 import dev.lazurite.quadz.client.resource.SplashResourceLoader;
@@ -44,7 +43,9 @@ public class QuadzClient implements ClientModInitializer {
         var player = Minecraft.getInstance().player;
 
         if (player != null) {
-            return Bindable.get(player.getMainHandItem()).flatMap(remote -> Search.forQuadWithBindId(player.level, player.position(), remote.getBindId(), 256));
+            return player.getMainHandItem().has(QuadzDataComponentTypes.BOUND_ID)
+                    ? Search.forQuadWithBindId(player.level(), player.position(), player.getMainHandItem().get(QuadzDataComponentTypes.BOUND_ID), 256)
+                    : Optional.empty();
         }
 
         return Optional.empty();

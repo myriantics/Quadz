@@ -4,6 +4,7 @@ import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.QuadzClient;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworkHandler;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
+import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
 import dev.lazurite.quadz.common.registry.QuadzPackets;
 import dev.lazurite.quadz.common.util.JoystickOutput;
 import dev.lazurite.quadz.client.Config;
@@ -25,10 +26,10 @@ public class ClientEventHooks {
 
     public static void onClientTick(Minecraft minecraft) {
         if (!minecraft.isPaused() && minecraft.player != null && JoystickOutput.controllerExists()) {
-            JoystickOutput.getAxisValue(minecraft.player, Config.pitch, new ResourceLocation(QuadzCommon.MOD_ID, "pitch"), Config.pitchInverted, false);
-            JoystickOutput.getAxisValue(minecraft.player, Config.yaw, new ResourceLocation(QuadzCommon.MOD_ID, "yaw"), Config.yawInverted, false);
-            JoystickOutput.getAxisValue(minecraft.player, Config.roll, new ResourceLocation(QuadzCommon.MOD_ID, "roll"), Config.rollInverted, false);
-            JoystickOutput.getAxisValue(minecraft.player, Config.throttle, new ResourceLocation(QuadzCommon.MOD_ID, "throttle"), Config.throttleInverted, Config.throttleInCenter);
+            JoystickOutput.getAxisValue(minecraft.player, Config.pitch, QuadzCommon.locate("pitch"), Config.pitchInverted, false);
+            JoystickOutput.getAxisValue(minecraft.player, Config.yaw, QuadzCommon.locate("yaw"), Config.yawInverted, false);
+            JoystickOutput.getAxisValue(minecraft.player, Config.roll, QuadzCommon.locate("roll"), Config.rollInverted, false);
+            JoystickOutput.getAxisValue(minecraft.player, Config.throttle, QuadzCommon.locate("throttle"), Config.throttleInverted, Config.throttleInCenter);
         }
     }
 
@@ -41,11 +42,11 @@ public class ClientEventHooks {
     }
 
     public static void onLeftClick() {
-        QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_QUADCOPTER_VIEW_C2S, buf -> buf.writeInt(-1));
+        QuadzClientPlayNetworking.send(RequestQuadcopterViewC2SPacket.LEFT_CLICK);
     }
 
     public static void onRightClick() {
-        QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_QUADCOPTER_VIEW_C2S, buf -> buf.writeInt(1));
+        QuadzClientPlayNetworking.send(RequestQuadcopterViewC2SPacket.RIGHT_CLICK);
     }
 
     public static void onClientLevelTick(ClientLevel level) {
@@ -62,9 +63,9 @@ public class ClientEventHooks {
 
     public static void onPostLogin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
         if (minecraft.player != null) {
-            minecraft.player.quadz$setJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "rate"), Config.rate);
-            minecraft.player.quadz$setJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "super_rate"), Config.superRate);
-            minecraft.player.quadz$setJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "expo"), Config.expo);
+            minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("rate"), Config.rate);
+            minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("super_rate"), Config.superRate);
+            minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("expo"), Config.expo);
         }
     }
 }

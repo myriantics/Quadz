@@ -4,7 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.quadz.client.QuadzClient;
 import dev.lazurite.quadz.client.render.RenderHooks;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.GameRenderer;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,16 +18,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
 
     @Inject(method = "renderLevel", at = @At("HEAD"))
-    public void renderLevel$HEAD(float f, long l, PoseStack poseStack, CallbackInfo ci) {
-        RenderHooks.onRenderLevel(f);
+    public void renderLevel$HEAD(DeltaTracker deltaTracker, CallbackInfo ci) {
+        RenderHooks.onRenderLevel(deltaTracker.getGameTimeDeltaPartialTick(true));
     }
 
     @ModifyArg(
             method = "renderLevel",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V",
-                    ordinal = 2
+                    target = "Lorg/joml/Quaternionf;conjugate(Lorg/joml/Quaternionf;)Lorg/joml/Quaternionf;"
             )
     )
     public Quaternionf renderLevel$multiplyYaw(Quaternionf quaternion) {
@@ -36,8 +37,7 @@ public class GameRendererMixin {
             method = "renderLevel",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V",
-                    ordinal = 3
+                    target = "Lorg/joml/Quaternionf;conjugate(Lorg/joml/Quaternionf;)Lorg/joml/Quaternionf;"
             )
     )
     public Quaternionf renderLevel$multiplyPitch(Quaternionf quaternion) {
@@ -45,7 +45,7 @@ public class GameRendererMixin {
     }
 
     @Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
-    private void renderItemInHand$HEAD(PoseStack poseStack, Camera camera, float f, CallbackInfo ci) {
+    private void renderItemInHand$HEAD(Camera camera, float f, Matrix4f matrix4f, CallbackInfo ci) {
         if (QuadzClient.getQuadcopterFromCamera().isPresent()) {
             ci.cancel();
         }

@@ -4,6 +4,8 @@ import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.QuadzClient;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
 import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
+import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
 import dev.lazurite.quadz.common.registry.QuadzPackets;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -18,7 +20,7 @@ public class CameraHooks {
     public static void onCameraReset() {
         index = 0;
         Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
-        QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_PLAYER_VIEW_C2S, buf -> {});
+        QuadzClientPlayNetworking.send(RequestPlayerViewC2SPacket.INSTANCE);
     }
 
     public static Optional<CameraType> onCycle() {
@@ -34,7 +36,7 @@ public class CameraHooks {
 
             if (index >= 0 && index <= 2) {
                 if (QuadzClient.getQuadcopterFromCamera().isPresent()) {
-                    QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_PLAYER_VIEW_C2S, buf -> {});
+                    QuadzClientPlayNetworking.send(RequestPlayerViewC2SPacket.INSTANCE);
                 }
             }
         };
@@ -49,7 +51,7 @@ public class CameraHooks {
             case 1 -> Optional.of(CameraType.THIRD_PERSON_BACK);
             case 2 -> Optional.of(CameraType.THIRD_PERSON_FRONT);
             case 3 -> {
-                QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_QUADCOPTER_VIEW_C2S, buf -> buf.writeInt(0));
+                QuadzClientPlayNetworking.send(new RequestQuadcopterViewC2SPacket(0));
                 yield Optional.of(CameraType.FIRST_PERSON);
             }
             case 4 -> {

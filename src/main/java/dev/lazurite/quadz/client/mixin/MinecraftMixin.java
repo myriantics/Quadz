@@ -19,11 +19,7 @@ public class MinecraftMixin {
 
     @Inject(
             method = "runTick",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/components/toasts/ToastComponent;render(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
-                    shift = At.Shift.AFTER
-            )
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;render(Lnet/minecraft/client/DeltaTracker;Z)V")
     )
     public void runTick$render(boolean bl, CallbackInfo ci) {
         RenderHooks.onRenderMinecraft(this.profiler);

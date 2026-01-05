@@ -4,12 +4,15 @@ import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.networking.QuadzServerPlayNetworking;
+import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
+import dev.lazurite.quadz.common.networking.s2c.JoystickInputS2CPacket;
 import dev.lazurite.quadz.common.registry.QuadzPackets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,30 +35,15 @@ public class PlayerHooks {
     }
 
     public static void onSyncJoystick(Player player) {
-        var level = player.level;
-        var joysticks = new HashMap<>(joystickValues);
+        Level level = player.level();
+        Map<ResourceLocation, Float> joysticks = new HashMap<>(joystickValues);
 
         if (level.isClientSide()) {
-            QuadzClientPlayNetworking.send(QuadzPackets.JOYSTICK_INPUT_C2S, buf -> {
-                buf.writeInt(joysticks.size());
-
-                joysticks.forEach((axis, value) -> {
-                    buf.writeResourceLocation(axis);
-                    buf.writeFloat(value);
-                });
-            });
+            QuadzClientPlayNetworking.send(new JoystickInputC2SPacket(joysticks));
         } else {
             level.players().forEach(p -> {
                 if (!p.equals(player) && p instanceof ServerPlayer serverPlayer) {
-                    QuadzServerPlayNetworking.send(serverPlayer, QuadzPackets.JOYSTICK_INPUT_S2C, buf -> {
-                        buf.writeUUID(serverPlayer.getUUID());
-                        buf.writeInt(joysticks.size());
-
-                        joysticks.forEach((axis, value) -> {
-                            buf.writeResourceLocation(axis);
-                            buf.writeFloat(value);
-                        });
-                    });
+                    QuadzServerPlayNetworking.send(serverPlayer, new JoystickInputS2CPacket(serverPlayer.getId(), joysticks));
                 }
             });
         }

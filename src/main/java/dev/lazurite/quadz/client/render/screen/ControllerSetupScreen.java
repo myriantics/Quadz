@@ -6,6 +6,7 @@ import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.client.render.screen.osd.OnScreenDisplay;
 import dev.lazurite.quadz.common.util.FloatBufferUtil;
 import dev.lazurite.quadz.common.util.JoystickOutput;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -19,10 +20,10 @@ public class ControllerSetupScreen extends Screen {
 
     private final Screen parent;
 
-    private final ResourceLocation pitchLocation = new ResourceLocation(QuadzCommon.MOD_ID, "pitch");
-    private final ResourceLocation yawLocation = new ResourceLocation(QuadzCommon.MOD_ID, "yaw");
-    private final ResourceLocation rollLocation = new ResourceLocation(QuadzCommon.MOD_ID, "roll");
-    private final ResourceLocation throttleLocation = new ResourceLocation(QuadzCommon.MOD_ID, "throttle");
+    private final ResourceLocation pitchLocation = QuadzCommon.locate("pitch");
+    private final ResourceLocation yawLocation = QuadzCommon.locate("yaw");
+    private final ResourceLocation rollLocation = QuadzCommon.locate("roll");
+    private final ResourceLocation throttleLocation = QuadzCommon.locate("throttle");
 
     private Button saveButton;
     private Button cancelButton;
@@ -173,19 +174,18 @@ public class ControllerSetupScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int i, int j, float f) {
-        super.renderDirtBackground(0);
-        super.render(poseStack, i, j, f);
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        super.render(guiGraphics, i, j, f);
 
         var pitch = JoystickOutput.getAxisValue(null, Config.pitch, this.pitchLocation, Config.pitchInverted, false);
         var yaw = JoystickOutput.getAxisValue(null, Config.yaw, this.yawLocation, Config.yawInverted, false);
         var roll = JoystickOutput.getAxisValue(null, Config.roll, this.rollLocation, Config.rollInverted, false);
         var throttle = JoystickOutput.getAxisValue(null, Config.throttle, this.throttleLocation, Config.throttleInverted, Config.throttleInCenter) + 1.0f;
-        OnScreenDisplay.renderSticks(poseStack, f, width / 2, height / 2 + 20, 40, 10, pitch, yaw, roll, throttle);
+        OnScreenDisplay.renderSticks(guiGraphics.pose(), f, width / 2, height / 2 + 20, 40, 10, pitch, yaw, roll, throttle);
 
         // An axis has been selected. Time to listen...
         if (this.axisConsumer != null) {
-            drawCenteredString(poseStack, this.font, Component.translatable("quadz.config.controller_setup.prompt"), this.width / 2, 85, 0x00FF00);
+            guiGraphics.drawCenteredString(this.font, Component.translatable("quadz.config.controller_setup.prompt"), this.width / 2, 85, 0x00FF00);
         }
     }
 

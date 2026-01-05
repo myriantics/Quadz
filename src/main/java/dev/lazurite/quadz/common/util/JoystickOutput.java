@@ -41,10 +41,10 @@ public interface JoystickOutput {
             value = deadzone != 0 && value < deadzone * 0.5f && value > -deadzone * 0.5f ? 0.0f : value;
         }
 
-        if (player != null && player.level.isClientSide()) {
+        if (player != null && player.level().isClientSide()) {
             /* Queue for transmission to the server */
             player.quadz$setJoystickValue(resourceLocation, value);
-        } else if (player != null && !player.level.isClientSide()) {
+        } else if (player != null && !player.level().isClientSide()) {
             /* Server-side retrieval */
             return player.quadz$getJoystickValue(resourceLocation);
         }

@@ -2,7 +2,9 @@ package dev.lazurite.quadz.client.render.screen;
 
 import dev.lazurite.quadz.QuadzCommon;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -29,9 +31,8 @@ public class ScreenHooks {
 
     private static ImageButton getButton(Screen parent, int x, int y) {
         return new ImageButton(
-                x, y, 20, 20, 0, 0, 20,
-                new ResourceLocation(QuadzCommon.MOD_ID, "textures/gui/quadz.png"),
-                32, 64,
+                20, 20, 0, 0,
+                new WidgetSprites(QuadzCommon.locate("textures/gui/quadz.png"), QuadzCommon.locate("textures/gui/quadz.png")),
                 button -> Minecraft.getInstance().setScreen(new ControllerSetupScreen(parent)),
                 Component.translatable("quadz.config.title")
         );

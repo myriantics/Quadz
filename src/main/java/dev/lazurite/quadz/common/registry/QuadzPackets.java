@@ -3,8 +3,16 @@ package dev.lazurite.quadz.common.registry;
 import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworkHandler;
 import dev.lazurite.quadz.common.networking.QuadzServerPlayNetworkHandler;
+import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
+import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
+import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
+import dev.lazurite.quadz.common.networking.s2c.JoystickInputS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class QuadzPackets {
@@ -16,26 +24,27 @@ public abstract class QuadzPackets {
     public static final ResourceLocation REQUEST_PLAYER_VIEW_C2S = locateC2S("request_player_view");
 
     public static void init() {
-        QuadzCommon.LOGGER.info("Registered Quadz' Packets!");
         initC2S();
+        initS2C();
+        QuadzCommon.LOGGER.info("Registered Quadz' Packets!");
     }
 
-    public static void initC2S() {
-        registerC2S(JOYSTICK_INPUT_C2S, QuadzServerPlayNetworkHandler::onJoystickInput);
-        registerC2S(REQUEST_QUADCOPTER_VIEW_C2S, QuadzServerPlayNetworkHandler::onQuadcopterViewRequested);
-        registerC2S(REQUEST_PLAYER_VIEW_C2S, QuadzServerPlayNetworkHandler::onPlayerViewRequestReceived);
+    private static void initC2S() {
+        registerC2S(JoystickInputC2SPacket.TYPE, JoystickInputC2SPacket.PACKET_CODEC);
+        registerC2S(RequestQuadcopterViewC2SPacket.TYPE, RequestQuadcopterViewC2SPacket.PACKET_CODEC);
+        registerC2S(RequestPlayerViewC2SPacket.TYPE, RequestPlayerViewC2SPacket.PACKET_CODEC);
     }
 
     private static void initS2C() {
-        registerS2C(JOYSTICK_INPUT_S2C, QuadzClientPlayNetworkHandler::onJoystickInput);
+        registerS2C(JoystickInputS2CPacket.TYPE, JoystickInputS2CPacket.PACKET_CODEC);
     }
 
-    private static void registerS2C(ResourceLocation id, ClientPlayNetworking.PlayChannelHandler handler) {
-        ClientPlayNetworking.registerGlobalReceiver(id, handler);
+    private static <T extends CustomPacketPayload> void registerS2C(CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
+        PayloadTypeRegistry.playS2C().register(type, codec);
     }
 
-    private static void registerC2S(ResourceLocation id, ServerPlayNetworking.PlayChannelHandler handler) {
-        ServerPlayNetworking.registerGlobalReceiver(id, handler);
+    private static <T extends CustomPacketPayload> void registerC2S(CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec){
+        PayloadTypeRegistry.playC2S().register(type, codec);
     }
 
     private static ResourceLocation locateS2C(String name) {

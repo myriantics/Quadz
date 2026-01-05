@@ -5,18 +5,11 @@ plugins {
 	id 'io.github.juuxel.loom-quiltflower' version '1.7.2'
 }
 
-group 'dev.lazurite'
-version quadz_version
-
 loom {
 	accessWidenerPath = file("src/main/resources/quadz.accessWidener")
 }
 
 repositories {
-	maven {
-		name 'Lazurite'
-		url 'https://lazurite.dev/releases'
-	}
 
 	maven {
 		name 'Gecko'
@@ -27,43 +20,20 @@ repositories {
 		name 'Shedaniel'
 		url "https://maven.shedaniel.me/"
 	}
-
-	maven {
-		name 'Ladysnake Mods'
-		url 'https://ladysnake.jfrog.io/artifactory/mods'
-		content {
-			includeGroup 'io.github.ladysnake'
-			includeGroupByRegex 'io\\.github\\.onyxstudios.*'
-		}
-	}
-
-	maven {
-		name 'Parchment'
-		url 'https://maven.parchmentmc.org'
-	}
-
-	mavenLocal()
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:$minecraft_version"
+
 	mappings loom.layered() {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-$minecraft_version:$parchment_version@zip")
 	}
 
 	// Fabric
 	modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabric_api_version"
 
-	// Lazurite
-	modImplementation "dev.lazurite:rayon-fabric:$rayon_version"
-	modImplementation include("dev.lazurite:form:$form_version")
-	modApi include("dev.lazurite:corduroy:$corduroy_version")
-//	modApi include("dev.lazurite:lattice:$lattice_version")
-
 	// Other
-	modImplementation include("io.github.ladysnake:satin:$satin_version") { transitive false }
 	modImplementation include("me.shedaniel.cloth:cloth-config-fabric:$cloth_version") { exclude(group: "net.fabricmc.fabric-api") }
 }
 
@@ -86,23 +56,4 @@ tasks.withType ProcessResources, {
 }
 
 publishing {
-	if (hasProperty('publish.lazurite.alias') && hasProperty('publish.lazurite.secret')) {
-		repositories {
-			maven {
-				name 'Lazurite'
-				url 'https://lazurite.dev/releases'
-
-				credentials {
-					username property('publish.lazurite.alias')
-					password property('publish.lazurite.secret')
-				}
-			}
-		}
-	}
-
-	publications {
-		quadz MavenPublication, {
-			from components.java
-		}
-	}
 }

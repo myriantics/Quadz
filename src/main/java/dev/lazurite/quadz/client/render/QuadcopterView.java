@@ -1,22 +1,10 @@
 package dev.lazurite.quadz.client.render;
 
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.lazurite.corduroy.api.View;
-import dev.lazurite.form.api.loader.TemplateLoader;
-import dev.lazurite.form.impl.common.template.model.Template;
 import dev.lazurite.quadz.Quadz;
 import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.client.render.screen.osd.OnScreenDisplay;
 import dev.lazurite.quadz.common.entity.Quadcopter;
-import dev.lazurite.rayon.impl.bullet.math.Convert;
-import dev.lazurite.rayon.impl.bullet.thread.util.Clock;
-import dev.lazurite.toolbox.api.math.QuaternionHelper;
-import dev.lazurite.toolbox.api.math.VectorHelper;
-import ladysnake.satin.api.managed.ManagedShaderEffect;
-import ladysnake.satin.api.managed.ShaderEffectManager;
-import ladysnake.satin.api.managed.uniform.Uniform1f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;

@@ -13,8 +13,8 @@ public class GuiMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render$TAIL(PoseStack poseStack, float tickDelta, CallbackInfo ci) {
-        QuadzClient.getQuadcopterFromCamera().ifPresent(quadcopter ->
-            quadcopter.getView().onGuiRender(poseStack, tickDelta)
+        QuadzClient.getQuadcopterFromCamera().ifPresent(quadcopter -> {}
+            // quadcopter.getView().onGuiRender(poseStack, tickDelta)
         );
     }
 

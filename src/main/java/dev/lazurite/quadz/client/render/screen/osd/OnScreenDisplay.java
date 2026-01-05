@@ -1,6 +1,5 @@
 package dev.lazurite.quadz.client.render.screen.osd;
 
-import com.jme3.math.Vector3f;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.Config;
@@ -23,12 +22,15 @@ public class OnScreenDisplay extends GuiComponent {
     }
 
     public void renderVelocity(PoseStack poseStack, float tickDelta) {
+        /*
         var client = Minecraft.getInstance();
         var height = client.getWindow().getGuiScaledHeight() - 25;
         var unit = Config.velocityUnit;
-        final var vel = Math.round(quadcopter.getRigidBody().getLinearVelocity(new Vector3f()).length() * unit.getFactor() * 10) / 10f;
+        // final var vel = Math.round(quadcopter.getRigidBody().getLinearVelocity(new Vector3f()).length() * unit.getFactor() * 10) / 10f;
         final var velocity = Component.literal(vel + " " + unit.getAbbreviation());
         font.drawShadow(poseStack, velocity, 25, height, 0xFFFFFFFF);
+
+         */
     }
 
     public void renderSticks(PoseStack poseStack, float tickDelta) {

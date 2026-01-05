@@ -11,8 +11,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
-public class QuadcopterView extends View implements View.Ticking {
-
+public class QuadcopterView/* extends View implements View.Ticking*/ {
+/*
     private static final ManagedShaderEffect STATIC_SHADER = ShaderEffectManager.getInstance().manage(new ResourceLocation(QuadzCommon.MOD_ID, "shaders/post/static.json"));
     private static final ManagedShaderEffect FISHEYE_SHADER = ShaderEffectManager.getInstance().manage(new ResourceLocation(QuadzCommon.MOD_ID, "shaders/post/fisheye.json"));
     private static final Uniform1f STATIC_AMOUNT = STATIC_SHADER.findUniform1f("Amount");
@@ -105,6 +105,6 @@ public class QuadcopterView extends View implements View.Ticking {
         }
 
         return this.template;
-    }
+    }*/
 
 }

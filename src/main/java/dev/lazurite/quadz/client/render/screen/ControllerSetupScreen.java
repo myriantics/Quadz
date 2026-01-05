@@ -1,7 +1,7 @@
 package dev.lazurite.quadz.client.render.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.client.render.screen.osd.OnScreenDisplay;
 import dev.lazurite.quadz.common.util.FloatBufferUtil;
@@ -19,10 +19,10 @@ public class ControllerSetupScreen extends Screen {
 
     private final Screen parent;
 
-    private final ResourceLocation pitchLocation = new ResourceLocation(Quadz.MODID, "pitch");
-    private final ResourceLocation yawLocation = new ResourceLocation(Quadz.MODID, "yaw");
-    private final ResourceLocation rollLocation = new ResourceLocation(Quadz.MODID, "roll");
-    private final ResourceLocation throttleLocation = new ResourceLocation(Quadz.MODID, "throttle");
+    private final ResourceLocation pitchLocation = new ResourceLocation(QuadzCommon.MOD_ID, "pitch");
+    private final ResourceLocation yawLocation = new ResourceLocation(QuadzCommon.MOD_ID, "yaw");
+    private final ResourceLocation rollLocation = new ResourceLocation(QuadzCommon.MOD_ID, "roll");
+    private final ResourceLocation throttleLocation = new ResourceLocation(QuadzCommon.MOD_ID, "throttle");
 
     private Button saveButton;
     private Button cancelButton;

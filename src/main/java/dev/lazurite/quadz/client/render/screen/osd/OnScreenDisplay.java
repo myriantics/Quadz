@@ -2,7 +2,7 @@ package dev.lazurite.quadz.client.render.screen.osd;
 
 import com.jme3.math.Vector3f;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.util.Search;
@@ -33,10 +33,10 @@ public class OnScreenDisplay extends GuiComponent {
 
     public void renderSticks(PoseStack poseStack, float tickDelta) {
         Search.forPlayer(quadcopter).ifPresent(player -> {
-            var pitch = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "pitch"));
-            var yaw = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "yaw"));
-            var roll = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "roll"));
-            var throttle = (player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "throttle")) + 1.0f);
+            var pitch = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "pitch"));
+            var yaw = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "yaw"));
+            var roll = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "roll"));
+            var throttle = (player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "throttle")) + 1.0f);
             var width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             var height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             renderSticks(poseStack, tickDelta, width / 2, height - 75, 25, 5, pitch, yaw, roll, throttle);

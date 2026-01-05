@@ -4,7 +4,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import dev.lazurite.form.api.Templated;
 import dev.lazurite.form.api.render.FormRegistry;
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.common.util.Bindable;
 import dev.lazurite.quadz.client.render.entity.QuadcopterEntityRenderer;
 import dev.lazurite.rayon.impl.bullet.math.Convert;
@@ -53,7 +53,7 @@ public class QuadcopterItem extends Item implements GeoItem, Templated.Item {
         if (level.isClientSide()) {
             return InteractionResultHolder.success(itemStack); // wave hand
         } else {
-            var entity = Quadz.QUADCOPTER.create(level);
+            var entity = QuadzCommon.QUADCOPTER.create(level);
             entity.copyFrom(Templated.get(itemStack));
             Bindable.get(itemStack).ifPresent(entity::copyFrom);
 

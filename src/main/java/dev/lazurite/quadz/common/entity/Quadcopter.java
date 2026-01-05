@@ -5,8 +5,9 @@ import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import dev.lazurite.form.api.Templated;
 import dev.lazurite.form.api.loader.TemplateLoader;
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.render.QuadcopterView;
+import dev.lazurite.quadz.common.registry.QuadzItems;
 import dev.lazurite.quadz.common.util.Bindable;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.common.item.GogglesItem;
@@ -116,14 +117,14 @@ public class Quadcopter extends LivingEntity implements EntityPhysicsElement, Te
                 this.getRigidBody().prioritize(player);
             }
 
-            var pitch = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "pitch"));
-            var yaw = -1 * player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "yaw"));
-            var roll = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "roll"));
-            var throttle = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "throttle")) + 1.0f;
+            var pitch = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "pitch"));
+            var yaw = -1 * player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "yaw"));
+            var roll = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "roll"));
+            var throttle = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "throttle")) + 1.0f;
 
-            var rate = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "rate"));
-            var superRate = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "super_rate"));
-            var expo = player.quadz$getJoystickValue(new ResourceLocation(Quadz.MODID, "expo"));
+            var rate = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "rate"));
+            var superRate = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "super_rate"));
+            var expo = player.quadz$getJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "expo"));
 
             this.rotate(
                     (float) BetaflightHelper.calculateRates(pitch, rate, expo, superRate, 0.05f),
@@ -156,7 +157,7 @@ public class Quadcopter extends LivingEntity implements EntityPhysicsElement, Te
             if (Float.isFinite(thrust.length())) {
                 getRigidBody().applyCentralForce(thrust.add(yawThrust).multLocal(-1));
             } else {
-                Quadz.LOGGER.warn("Infinite thrust force!");
+                QuadzCommon.LOGGER.warn("Infinite thrust force!");
             }
         }, () -> {
             this.setArmed(false);
@@ -206,7 +207,7 @@ public class Quadcopter extends LivingEntity implements EntityPhysicsElement, Te
 
     @Override
     public void kill() {
-        var itemStack = new ItemStack(Quadz.QUADCOPTER_ITEM);
+        var itemStack = new ItemStack(QuadzItems.QUADCOPTER_ITEM);
         Bindable.get(itemStack).ifPresent(bindable -> bindable.copyFrom(this));
         Templated.get(itemStack).copyFrom(this);
         this.spawnAtLocation(itemStack);

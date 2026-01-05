@@ -1,6 +1,6 @@
 package dev.lazurite.quadz.common.item;
 
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -46,7 +46,7 @@ public class GogglesItem extends ArmorItem implements GeoItem {
             @Override
             public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {
-                    this.renderer = new GeoArmorRenderer<>(new DefaultedItemGeoModel<>(new ResourceLocation(Quadz.MODID, "armor/goggles")));
+                    this.renderer = new GeoArmorRenderer<>(new DefaultedItemGeoModel<>(new ResourceLocation(QuadzCommon.MOD_ID, "armor/goggles")));
                 }
 
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);

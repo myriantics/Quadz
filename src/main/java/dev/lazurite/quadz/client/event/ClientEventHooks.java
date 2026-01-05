@@ -1,33 +1,34 @@
 package dev.lazurite.quadz.client.event;
 
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.QuadzClient;
+import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworkHandler;
+import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
+import dev.lazurite.quadz.common.registry.QuadzPackets;
 import dev.lazurite.quadz.common.util.JoystickOutput;
 import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.client.render.screen.ControllerConnectedToast;
-import dev.lazurite.toolbox.api.network.ClientNetworking;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.DefaultByteBufHolder;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ClientEventHooks {
 
-    public static void onPostLogin(Minecraft minecraft, ClientLevel level, LocalPlayer player) {
-        if (player != null) {
-            player.quadz$setJoystickValue(new ResourceLocation(Quadz.MODID, "rate"), Config.rate);
-            player.quadz$setJoystickValue(new ResourceLocation(Quadz.MODID, "super_rate"), Config.superRate);
-            player.quadz$setJoystickValue(new ResourceLocation(Quadz.MODID, "expo"), Config.expo);
-        }
-    }
-
     public static void onClientTick(Minecraft minecraft) {
         if (!minecraft.isPaused() && minecraft.player != null && JoystickOutput.controllerExists()) {
-            JoystickOutput.getAxisValue(minecraft.player, Config.pitch, new ResourceLocation(Quadz.MODID, "pitch"), Config.pitchInverted, false);
-            JoystickOutput.getAxisValue(minecraft.player, Config.yaw, new ResourceLocation(Quadz.MODID, "yaw"), Config.yawInverted, false);
-            JoystickOutput.getAxisValue(minecraft.player, Config.roll, new ResourceLocation(Quadz.MODID, "roll"), Config.rollInverted, false);
-            JoystickOutput.getAxisValue(minecraft.player, Config.throttle, new ResourceLocation(Quadz.MODID, "throttle"), Config.throttleInverted, Config.throttleInCenter);
+            JoystickOutput.getAxisValue(minecraft.player, Config.pitch, new ResourceLocation(QuadzCommon.MOD_ID, "pitch"), Config.pitchInverted, false);
+            JoystickOutput.getAxisValue(minecraft.player, Config.yaw, new ResourceLocation(QuadzCommon.MOD_ID, "yaw"), Config.yawInverted, false);
+            JoystickOutput.getAxisValue(minecraft.player, Config.roll, new ResourceLocation(QuadzCommon.MOD_ID, "roll"), Config.rollInverted, false);
+            JoystickOutput.getAxisValue(minecraft.player, Config.throttle, new ResourceLocation(QuadzCommon.MOD_ID, "throttle"), Config.throttleInverted, Config.throttleInCenter);
         }
     }
 
@@ -40,11 +41,11 @@ public class ClientEventHooks {
     }
 
     public static void onLeftClick() {
-        ClientNetworking.send(Quadz.Networking.REQUEST_QUADCOPTER_VIEW, buf -> buf.writeInt(-1));
+        QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_QUADCOPTER_VIEW_C2S, buf -> buf.writeInt(-1));
     }
 
     public static void onRightClick() {
-        ClientNetworking.send(Quadz.Networking.REQUEST_QUADCOPTER_VIEW, buf -> buf.writeInt(1));
+        QuadzClientPlayNetworking.send(QuadzPackets.REQUEST_QUADCOPTER_VIEW_C2S, buf -> buf.writeInt(1));
     }
 
     public static void onClientLevelTick(ClientLevel level) {
@@ -59,4 +60,11 @@ public class ClientEventHooks {
         }
     }
 
+    public static void onPostLogin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
+        if (minecraft.player != null) {
+            minecraft.player.quadz$setJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "rate"), Config.rate);
+            minecraft.player.quadz$setJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "super_rate"), Config.superRate);
+            minecraft.player.quadz$setJoystickValue(new ResourceLocation(QuadzCommon.MOD_ID, "expo"), Config.expo);
+        }
+    }
 }

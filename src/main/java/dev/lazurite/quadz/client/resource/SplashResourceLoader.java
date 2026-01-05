@@ -1,6 +1,6 @@
 package dev.lazurite.quadz.client.resource;
 
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,11 +13,11 @@ import java.nio.charset.StandardCharsets;
 
 public class SplashResourceLoader implements SimpleSynchronousResourceReloadListener {
 
-    public static final ResourceLocation location = new ResourceLocation(Quadz.MODID, "misc/texts/splashes.txt");
+    public static final ResourceLocation location = new ResourceLocation(QuadzCommon.MOD_ID, "misc/texts/splashes.txt");
 
     @Override
     public ResourceLocation getFabricId() {
-        return new ResourceLocation(Quadz.MODID, "splash");
+        return new ResourceLocation(QuadzCommon.MOD_ID, "splash");
     }
 
     @Override

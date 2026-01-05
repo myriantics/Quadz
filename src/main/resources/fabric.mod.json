@@ -4,7 +4,9 @@
   "version": "$version",
   "environment": "*",
   "entrypoints": {
-    "main": [ "dev.lazurite.quadz.Quadz" ],
+    "main": [
+      "dev.lazurite.quadz.QuadzCommon"
+    ],
     "client": [ "dev.lazurite.quadz.client.QuadzClient" ]
   },
   "mixins": [

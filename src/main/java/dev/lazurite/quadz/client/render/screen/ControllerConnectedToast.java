@@ -2,7 +2,8 @@ package dev.lazurite.quadz.client.render.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
+import dev.lazurite.quadz.common.registry.QuadzItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
@@ -34,7 +35,7 @@ public class ControllerConnectedToast implements Toast {
         toastComponent.blit(poseStack, 0, 0, 0, 0, width(), height());
         toastComponent.getMinecraft().font.draw(poseStack, message, 30, 7, -1);
         toastComponent.getMinecraft().font.draw(poseStack, Component.literal(controllerName), 30, 18, -1);
-        toastComponent.getMinecraft().getItemRenderer().renderAndDecorateFakeItem(new ItemStack(Quadz.REMOTE_ITEM), 8, 8);
+        toastComponent.getMinecraft().getItemRenderer().renderAndDecorateFakeItem(new ItemStack(QuadzItems.REMOTE_ITEM), 8, 8);
 
         return startTime >= 5000L ? Visibility.HIDE : Visibility.SHOW;
     }

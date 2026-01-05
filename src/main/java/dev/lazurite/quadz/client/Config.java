@@ -3,7 +3,7 @@ package dev.lazurite.quadz.client;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.render.screen.osd.VelocityUnit;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -75,7 +75,7 @@ public class Config {
         try {
             Files.writeString(path, config.toString());
         } catch(IOException e) {
-            Quadz.LOGGER.error(e);
+            QuadzCommon.LOGGER.error(e);
         }
     }
 
@@ -112,7 +112,7 @@ public class Config {
             fisheyeEnabled = config.get("fisheyeEnabled").getAsBoolean();
             fisheyeAmount = config.get("fisheyeAmount").getAsFloat();
         } catch(IOException e) {
-            Quadz.LOGGER.error(e);
+            QuadzCommon.LOGGER.error(e);
         }
     }
 

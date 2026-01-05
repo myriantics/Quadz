@@ -1,9 +1,11 @@
 package dev.lazurite.quadz.common.hooks;
 
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.toolbox.api.network.ClientNetworking;
 import dev.lazurite.toolbox.api.network.ServerNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +35,7 @@ public class PlayerHooks {
         var joysticks = new HashMap<>(joystickValues);
 
         if (level.isClientSide()) {
-            ClientNetworking.send(Quadz.Networking.JOYSTICK_INPUT, buf -> {
+            ClientPlayNetworking.send(QuadzCommon.Networking.JOYSTICK_INPUT, buf -> {
                 buf.writeInt(joysticks.size());
 
                 joysticks.forEach((axis, value) -> {
@@ -44,7 +46,7 @@ public class PlayerHooks {
         } else {
             level.players().forEach(p -> {
                 if (!p.equals(player) && p instanceof ServerPlayer serverPlayer) {
-                    ServerNetworking.send(serverPlayer, Quadz.Networking.JOYSTICK_INPUT, buf -> {
+                    ServerPlayNetworking.send(serverPlayer, QuadzCommon.Networking.JOYSTICK_INPUT, buf -> {
                         buf.writeUUID(serverPlayer.getUUID());
                         buf.writeInt(joysticks.size());
 

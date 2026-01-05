@@ -1,8 +1,9 @@
 package dev.lazurite.quadz.common.util;
 
-import dev.lazurite.quadz.Quadz;
+import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.common.entity.Quadcopter;
-import dev.lazurite.toolbox.api.util.PlayerUtil;
+import dev.lazurite.quadz.common.registry.QuadzItems;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -97,11 +98,11 @@ public interface Search {
     static Optional<? extends Player> forPlayer(Quadcopter quadcopter) {
         if (quadcopter.getLevel().isClientSide()) {
             return quadcopter.getLevel().players().stream()
-                    .filter(player -> Bindable.get(player.getMainHandItem(), quadcopter).isPresent() && player.getMainHandItem().getItem() == Quadz.REMOTE_ITEM)
+                    .filter(player -> Bindable.get(player.getMainHandItem(), quadcopter).isPresent() && player.getMainHandItem().getItem() == QuadzItems.REMOTE_ITEM)
                     .findFirst();
         }
 
-        return PlayerUtil.tracking(quadcopter)
+        return PlayerLookup.tracking(quadcopter)
                 .stream().filter(player -> Bindable.get(player.getMainHandItem(), quadcopter).isPresent())
                 .findFirst();
     }

@@ -1,16 +1,12 @@
 package dev.lazurite.quadz.client.render;
 
 import com.google.common.collect.Maps;
-import com.jme3.math.Vector3f;
-import dev.lazurite.quadz.common.util.event.JoystickEvents;
+import com.mojang.math.Axis;
+import dev.lazurite.quadz.common.registry.QuadzEvents;
 import dev.lazurite.quadz.common.util.JoystickOutput;
 import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.client.QuadzClient;
-import dev.lazurite.rayon.impl.bullet.math.Convert;
-import dev.lazurite.toolbox.api.math.QuaternionHelper;
-import dev.lazurite.toolbox.api.math.VectorHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.joml.Quaternionf;
 
@@ -29,7 +25,7 @@ public class RenderHooks {
                 if (player.hasLineOfSight(quadcopter)) {
                     /* Get the difference in position between the player and the quadcopter */
                     var delta = Minecraft.getInstance().player.getEyePosition(tickDelta)
-                            .subtract(VectorHelper.toVec3(Convert.toMinecraft(quadcopter.getPhysicsLocation(new Vector3f(), tickDelta))));
+                            .subtract(quadcopter.getPosition(tickDelta));
 
                     /* Set new pitch and yaw */
 					player.setYRot((float) Math.toDegrees(Math.atan2(delta.z, delta.x)) + 90);
@@ -54,10 +50,10 @@ public class RenderHooks {
                     JoystickOutput.JOYSTICKS.put(i, JoystickOutput.getJoystickName(i));
 
                     if (!lastJoysticks.containsKey(i) && loaded) {
-                        JoystickEvents.JOYSTICK_CONNECT.invoke(i, JoystickOutput.getJoystickName(i));
+                        QuadzEvents.JOYSTICK_CONNECT.invoker().onConnect(i, JoystickOutput.getJoystickName(i));
                     }
                 } else if (lastJoysticks.containsKey(i) && loaded) {
-                    JoystickEvents.JOYSTICK_DISCONNECT.invoke(i, lastJoysticks.get(i));
+                    QuadzEvents.JOYSTICK_DISCONNECT.invoker().onDisconnect(i, lastJoysticks.get(i));
                 }
             }
 
@@ -68,7 +64,7 @@ public class RenderHooks {
 
     public static Quaternionf onMultiplyYaw(Quaternionf quaternion) {
         if (QuadzClient.getQuadcopterFromCamera().isPresent()) {
-            return QuaternionHelper.rotateY(new Quaternionf(0, 0, 0, 1), 180);
+            return Axis.YP.rotationDegrees(180f);
         }
 
         return quaternion;

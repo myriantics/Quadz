@@ -23,9 +23,7 @@
   "depends": {
     "minecraft": ">=1.19.3",
     "fabricloader": ">=0.14",
-    "fabric": "*",
-    "geckolib": ">=4",
-    "rayon": ">=1.6.2"
+    "fabric": "*"
   },
   "breaks": {
     "immersive_portals": "*",

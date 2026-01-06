@@ -53,6 +53,9 @@
       ],
       "net/minecraft/class_1657": [
         "dev/lazurite/quadz/extension/PlayerExtension"
+      ],
+      "net/minecraft/class_310": [
+        "dev/lazurite/quadz/extension/MinecraftExtension"
       ]
     }
   }

@@ -1,6 +1,8 @@
 package dev.lazurite.quadz.mixin.minecraft;
 
 import dev.lazurite.quadz.control.ControllerSim;
+import dev.lazurite.quadz.control.QuadcopterInterface;
+import dev.lazurite.quadz.extension.MinecraftExtension;
 import dev.lazurite.quadz.render.RenderHooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -14,19 +16,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftMixin {
+public abstract class MinecraftMixin implements MinecraftExtension {
 
+    @Unique
+    private final QuadcopterInterface quadz$quadcopterInterface = new QuadcopterInterface();
 
     @Shadow private ProfilerFiller profiler;
 
-    @Shadow
-    @Final
-    public Options options;
-
-    @Unique
-    private final ControllerSim quadz$controllerSim = new ControllerSim(
-            (Minecraft) (Object) this
-    );
+    @Override
+    public QuadcopterInterface quadz$getQuadcopterInterface() {
+        return this.quadz$quadcopterInterface;
+    }
 
     @Inject(
             method = "runTick",
@@ -41,6 +41,8 @@ public abstract class MinecraftMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;tick(Ljava/util/function/BooleanSupplier;)V")
     )
     private void quadz$tickControllerSim(CallbackInfo ci) {
-        this.quadz$controllerSim.tick();
+        if (this.quadz$quadcopterInterface.isEnabled()) {
+            this.quadz$quadcopterInterface.tick((Minecraft) (Object)this);
+        }
     }
 }

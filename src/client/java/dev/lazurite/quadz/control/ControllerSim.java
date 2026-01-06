@@ -10,15 +10,9 @@ public class ControllerSim {
     private final Joystick left = new Joystick();
     private final Joystick right = new Joystick();
 
-    private final Minecraft minecraft;
-
-    public ControllerSim(Minecraft minecraft) {
-        this.minecraft = minecraft;
-    }
-
-    public void tick() {
-        Options options = this.minecraft.options;
-        if (this.minecraft.cameraEntity instanceof Quadcopter) {
+    public void tick(Minecraft minecraft, QuadcopterInterface quadcopterInterface) {
+        Options options = minecraft.options;
+        if (minecraft.cameraEntity instanceof Quadcopter) {
             float upVal = options.keyJump.isDown() ? 1 : 0;
             float downVal = options.keyShift.isDown() ? -1 : 0;
             float forwardsVal = options.keyUp.isDown() ? 1 : 0;

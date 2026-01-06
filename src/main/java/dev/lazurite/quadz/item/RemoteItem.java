@@ -22,7 +22,10 @@ import org.jetbrains.annotations.Nullable;
 public class RemoteItem extends Item {
 
     public RemoteItem() {
-        super(new Properties().stacksTo(1).component(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND));
+        super(new Properties()
+                .stacksTo(1)
+                .component(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND)
+        );
     }
 
     @Override
@@ -30,7 +33,6 @@ public class RemoteItem extends Item {
         ItemStack usedStack = player.getItemInHand(interactionHand);
         BindingComponent original = usedStack.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND);
 
-        int fart = 0;
         if (player.isCrouching()) {
             @Nullable Quadcopter quadcopter = player.quadz$getActiveQuadcopter();
             if (quadcopter != null && quadcopter.getUUID().equals(original.boundUUID())) {

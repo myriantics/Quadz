@@ -45,20 +45,30 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements L
     private void quadz$updateActiveQuadcopter(CallbackInfo ci) {
         ItemStack mainHandStack = this.getMainHandItem();
 
+        // remove it if its discarded
+        if (this.quadz$activeQuadcopter != null && this.quadz$activeQuadcopter.isRemoved()) {
+            this.quadz$activeQuadcopter = null;
+        }
+
         if (mainHandStack.getItem() instanceof RemoteItem && mainHandStack.has(QuadzDataComponentTypes.BINDING)) {
 
             @Nullable UUID boundUUID = mainHandStack.get(QuadzDataComponentTypes.BINDING).boundUUID();
-            if (boundUUID != null && !(this.quadz$activeQuadcopter != null && this.quadz$activeQuadcopter.getUUID().equals(boundUUID))) {
-                Vec3 eyePos = this.getEyePosition();
-                final double range = 256;
+            if (boundUUID != null) {
+                if (!(this.quadz$activeQuadcopter != null && this.quadz$activeQuadcopter.getUUID().equals(boundUUID))) {
+                    Vec3 eyePos = this.getEyePosition();
+                    final double range = 256;
 
-                this.quadz$activeQuadcopter = this.level().getNearestEntity(
-                        Quadcopter.class,
-                        TargetingConditions.DEFAULT.selector((livingEntity -> livingEntity.getUUID().equals(boundUUID))),
-                        null,
-                        eyePos.x, eyePos.y, eyePos.z,
-                        AABB.unitCubeFromLowerCorner(eyePos).inflate(range)
-                );
+                    this.quadz$activeQuadcopter = this.level().getNearestEntity(
+                            Quadcopter.class,
+                            TargetingConditions.DEFAULT.selector((livingEntity -> livingEntity.getUUID().equals(boundUUID))),
+                            null,
+                            eyePos.x, eyePos.y, eyePos.z,
+                            AABB.unitCubeFromLowerCorner(eyePos).inflate(range)
+                    );
+                }
+            } else {
+                // if the selected remote doesn't have a uuid, clear cache
+                this.quadz$activeQuadcopter = null;
             }
         }
     }

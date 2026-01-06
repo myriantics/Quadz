@@ -13,6 +13,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
@@ -181,9 +183,25 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
     }
 
     @Override
-    public void kill() {
+    protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource damageSource, boolean bl) {
+        super.dropCustomDeathLoot(serverLevel, damageSource, bl);
         this.spawnAtLocation(this.quadcopterStack);
+    }
+
+    @Override
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
         this.remove(RemovalReason.KILLED);
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource damageSource) {
+        return SoundEvents.CHAIN_HIT;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getDeathSound() {
+        return SoundEvents.CHAIN_BREAK;
     }
 
     @Override
@@ -193,7 +211,7 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
             return true;
         }
 
-        return false;
+        return super.hurt(source, amount);
     }
 
     @Override

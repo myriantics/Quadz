@@ -1,7 +1,7 @@
 package dev.lazurite.quadz;
 
-import dev.lazurite.quadz.common.datagen.QuadzDamageTypeProvider;
-import dev.lazurite.quadz.common.datagen.QuadzItemTagProvider;
+import dev.lazurite.quadz.datagen.QuadzDamageTypeProvider;
+import dev.lazurite.quadz.datagen.QuadzItemTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 

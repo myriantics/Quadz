@@ -8,17 +8,14 @@
       "dev.lazurite.quadz.QuadzCommon"
     ],
     "client": [
-      "dev.lazurite.quadz.client.QuadzClient"
+      "dev.lazurite.quadz.QuadzClient"
     ],
     "fabric-datagen": [
       "dev.lazurite.quadz.QuadzDataGenerator"
     ]
   },
   "mixins": [
-    {
-      "config": "quadz.common.mixins.json",
-      "environment": "*"
-    },
+    "quadz.mixins.json",
     {
       "config": "quadz.client.mixins.json",
       "environment": "client"
@@ -52,10 +49,10 @@
     },
     "loom:injected_interfaces": {
       "net/minecraft/class_5498": [
-        "dev/lazurite/quadz/client/extension/CameraTypeExtension"
+        "dev/lazurite/quadz/extension/CameraTypeExtension"
       ],
       "net/minecraft/class_1657": [
-        "dev/lazurite/quadz/common/extension/PlayerExtension"
+        "dev/lazurite/quadz/extension/PlayerExtension"
       ]
     }
   }

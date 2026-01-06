@@ -35,7 +35,7 @@ generating the world independently of the player. This was a feature of Quadz in
 was achieved by moving the player along with the quadcopter which was :concern:.
 
 ### Quadcopter Templates
-Data driven quadcopters are now possible in a similar way to how Minecraft's resource or data packs work. It allows
+Data driven quadcopters are now possible in a similar way to how Minecraft's dev.lazurite.quadz.resource or data packs work. It allows
 users to pack quadcopter information into a zip file or a folder and load from their `.minecraft/quadz` directory.
 Additionally, any quadcopter template loaded into the game is transferable to other clients and servers. When a player
 joins a server, the server will send all of its known templates to that client and also receive all of the client's

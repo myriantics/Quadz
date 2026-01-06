@@ -6,6 +6,7 @@ plugins {
 
 loom {
 	accessWidenerPath = file("src/main/resources/quadz.accessWidener")
+	splitEnvironmentSourceSets()
 }
 
 repositories {

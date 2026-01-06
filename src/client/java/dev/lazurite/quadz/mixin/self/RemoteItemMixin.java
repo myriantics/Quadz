@@ -1,0 +1,46 @@
+package dev.lazurite.quadz.mixin.self;
+
+import dev.lazurite.quadz.entity.quadcopter.Quadcopter;
+import dev.lazurite.quadz.item.RemoteItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(value = RemoteItem.class)
+public abstract class RemoteItemMixin extends Item {
+    public RemoteItemMixin(Properties properties) {
+        super(properties);
+    }
+
+    @Inject(
+            method = "use",
+            at = @At(value = "RETURN")
+    )
+    private void quadz$swapCameras(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
+        if (player instanceof LocalPlayer) {
+            Minecraft minecraft = Minecraft.getInstance();
+
+            switch (Minecraft.getInstance().getCameraEntity()) {
+                case LocalPlayer localPlayer -> {
+                    Quadcopter activeQuadcopter = localPlayer.quadz$getActiveQuadcopter();
+                    if (activeQuadcopter != null) {
+                        minecraft.setCameraEntity(activeQuadcopter);
+                    }
+                }
+                case Quadcopter quadcopter -> {
+                    minecraft.setCameraEntity(player);
+                }
+                case null, default -> {}
+            }
+        }
+    }
+}

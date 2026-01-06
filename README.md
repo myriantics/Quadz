@@ -33,7 +33,7 @@ In order to use this mod, you'll have to download a few other things as well:
 ### Optional Dependencies (Highly Recommended)
 The following dependencies allow you to configure Quadz using its config screen. If you don't install these, you won't
 be able to change your controller or camera settings.
-* [Cloth Config API](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
+* [Cloth dev.lazurite.quadz.Config API](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
 * [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu)
 
 ### Conflicts

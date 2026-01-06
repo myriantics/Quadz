@@ -1,10 +1,13 @@
 package dev.lazurite.quadz;
 
-import dev.lazurite.quadz.common.networking.QuadzServerPlayNetworking;
-import dev.lazurite.quadz.common.registry.*;
-import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
-import dev.lazurite.quadz.common.registry.item.QuadzItemGroups;
-import dev.lazurite.quadz.common.registry.item.QuadzItems;
+import dev.lazurite.quadz.networking.QuadzServerPlayNetworking;
+import dev.lazurite.quadz.registry.QuadzDamageTypes;
+import dev.lazurite.quadz.registry.QuadzEntityTypes;
+import dev.lazurite.quadz.registry.QuadzEvents;
+import dev.lazurite.quadz.registry.QuadzPackets;
+import dev.lazurite.quadz.registry.item.QuadzDataComponentTypes;
+import dev.lazurite.quadz.registry.item.QuadzItemGroups;
+import dev.lazurite.quadz.registry.item.QuadzItems;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;

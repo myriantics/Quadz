@@ -6,6 +6,7 @@ import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -36,17 +37,17 @@ public class RemoteItem extends Item {
             return InteractionResultHolder.success(usedStack);
         } else {
 
-            if (level.isClientSide() && player.isLocalPlayer()) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
                 switch (cameraEntity) {
                     case LocalPlayer localPlayer -> {
                         Quadcopter activeQuadcopter = localPlayer.quadz$getActiveQuadcopter();
                         if (activeQuadcopter != null) {
-                            Minecraft.getInstance().setCameraEntity(activeQuadcopter);
+                            serverPlayer.setCamera(activeQuadcopter);
                         }
                     }
                     case Quadcopter quadcopter -> {
-                        Minecraft.getInstance().setCameraEntity(player);
+                        serverPlayer.setCamera(serverPlayer);
                     }
                     case null, default -> {}
                 }

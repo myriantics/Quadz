@@ -58,14 +58,14 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerExtensio
 
             @Nullable UUID boundUUID = mainHandStack.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).boundUUID();
             if (boundUUID != null) {
-                if (!(this.quadz$activeQuadcopter != null && this.quadz$activeQuadcopter.getUUID().equals(boundUUID))) {
+                if (this.quadz$activeQuadcopter == null || !this.quadz$activeQuadcopter.getUUID().equals(boundUUID)) {
                     Vec3 eyePos = this.getEyePosition();
                     final double range = 256;
 
                     this.quadz$activeQuadcopter = this.level().getNearestEntity(
                             Quadcopter.class,
                             TargetingConditions.DEFAULT.selector((livingEntity -> livingEntity.getUUID().equals(boundUUID))),
-                            null,
+                            this,
                             eyePos.x, eyePos.y, eyePos.z,
                             AABB.unitCubeFromLowerCorner(eyePos).inflate(range)
                     );

@@ -49,7 +49,7 @@ public class QuadcopterItem extends Item {
                 }
 
                 // split 1 quadcopter off of the stack and set that stack to being within the quadcopter entity
-                quadcopter.setQuadcopterStack(itemStack.split(1));
+                quadcopter.setQuadcopterStack(player.isCreative() ? itemStack.copyWithCount(1) : itemStack.split(1));
                 level.addFreshEntity(quadcopter);
             }
         }

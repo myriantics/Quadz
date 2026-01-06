@@ -6,6 +6,7 @@ import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.common.item.GogglesItem;
 import dev.lazurite.quadz.common.util.BetaflightHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -13,6 +14,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -68,10 +70,17 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
                 }
             }
              */
-
             // Hurt entities on collision
             this.level().getEntities(this, this.getBoundingBox(), entity -> entity instanceof LivingEntity).forEach(entity -> {
-                entity.hurt(level().damageSources().source(QuadzDamageTypes.DIVEBOMBING), 2.0f);
+
+                entity.hurt(
+                        this.level().damageSources().source(
+                                QuadzDamageTypes.QUADCOPTER,
+                                this.getOwner(),
+                                this
+                        ),
+                        2.0f
+                );
             });
         }
 

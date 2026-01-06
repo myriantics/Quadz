@@ -1,13 +1,17 @@
 package dev.lazurite.quadz.common.entity;
 
 import dev.lazurite.quadz.QuadzCommon;
+import dev.lazurite.quadz.common.component.BindingComponent;
+import dev.lazurite.quadz.common.item.RemoteItem;
 import dev.lazurite.quadz.common.registry.QuadzDamageTypes;
+import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.common.item.GogglesItem;
 import dev.lazurite.quadz.common.util.BetaflightHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,6 +19,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
@@ -151,6 +157,21 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
             }
             */
         });
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand interactionHand) {
+        ItemStack usedStack = player.getItemInHand(interactionHand);
+
+        if (usedStack.getItem() instanceof RemoteItem && (this.getOwner() == null || player == this.getOwner())) {
+            if (!player.level().isClientSide()) {
+                usedStack.set(QuadzDataComponentTypes.BINDING, new BindingComponent(this.getUUID()));
+                player.displayClientMessage(Component.translatable("quadz.message.entity_bound", this.getName()), true);
+            }
+            return InteractionResult.SUCCESS;
+        } else {
+            return super.interact(player, interactionHand);
+        }
     }
 
     /*

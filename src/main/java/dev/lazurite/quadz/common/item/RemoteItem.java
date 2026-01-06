@@ -28,17 +28,6 @@ public class RemoteItem extends Item {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand interactionHand) {
-        if (livingEntity instanceof Quadcopter quadcopter) {
-            itemStack.set(QuadzDataComponentTypes.BINDING, new BindingComponent(quadcopter.getUUID()));
-            player.displayClientMessage(Component.translatable("quadz.message.entity_bound", quadcopter.getName()), true);
-            return InteractionResult.SUCCESS;
-        } else {
-            return super.interactLivingEntity(itemStack, player, livingEntity, interactionHand);
-        }
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack usedStack = player.getItemInHand(interactionHand);
 

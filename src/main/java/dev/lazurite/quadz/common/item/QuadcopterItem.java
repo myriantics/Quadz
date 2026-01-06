@@ -1,5 +1,6 @@
 package dev.lazurite.quadz.common.item;
 
+import dev.lazurite.quadz.common.component.BindingComponent;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.registry.QuadzEntityTypes;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
@@ -24,7 +25,7 @@ import java.util.Random;
 public class QuadcopterItem extends Item {
 
     public QuadcopterItem() {
-        super(new Properties().stacksTo(1).component(QuadzDataComponentTypes.BINDABLE, Unit.INSTANCE));
+        super(new Properties().stacksTo(1));
     }
 
     @Override
@@ -35,26 +36,21 @@ public class QuadcopterItem extends Item {
         if (level.isClientSide()) {
             return InteractionResultHolder.success(itemStack); // wave hand
         } else {
-            Quadcopter entity = QuadzEntityTypes.QUADCOPTER.create(level);
+            Quadcopter quadcopter = QuadzEntityTypes.QUADCOPTER.create(level);
 
-            if (entity != null) {
-                if (itemStack.has(QuadzDataComponentTypes.BINDABLE)) {
-                    entity.setBindId(itemStack.getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1));
-                }
-
+            if (quadcopter != null) {
                 if (hitResult.getType() == HitResult.Type.BLOCK) {
-                    entity.absMoveTo(hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
+                    quadcopter.absMoveTo(hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
                 } else {
-                    var random = new Random();
                     var direction = hitResult.getLocation().subtract(player.position()).add(0, player.getEyeHeight(), 0).normalize();
                     var pos = player.position().add(direction);
 
-                    entity.absMoveTo(pos.x, pos.y, pos.z);
+                    quadcopter.absMoveTo(pos.x, pos.y, pos.z);
                 }
 
-                level.addFreshEntity(entity);
-                itemStack.shrink(1);
-                itemStack = new ItemStack(Items.AIR);
+                // split 1 quadcopter off of the stack and set that stack to being within the quadcopter entity
+                quadcopter.setQuadcopterStack(itemStack.split(1));
+                level.addFreshEntity(quadcopter);
             }
         }
 

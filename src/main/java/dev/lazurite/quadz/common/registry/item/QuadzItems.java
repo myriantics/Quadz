@@ -10,9 +10,9 @@ import net.minecraft.world.item.Item;
 
 public abstract class QuadzItems {
 
-    public static final Item GOGGLES_ITEM = register("goggles", new GogglesItem());
-    public static final Item QUADCOPTER_ITEM = register("quadcopter", new QuadcopterItem());
-    public static final Item REMOTE_ITEM = register("remote", new RemoteItem());
+    public static final Item GOGGLES = register("goggles", new GogglesItem());
+    public static final Item QUADCOPTER = register("quadcopter", new QuadcopterItem());
+    public static final Item REMOTE = register("remote", new RemoteItem());
 
     public static void init() {
         QuadzCommon.LOGGER.info("Registered Quadz' Items!");

@@ -24,14 +24,4 @@ public class MinecraftMixin {
     public void runTick$render(boolean bl, CallbackInfo ci) {
         RenderHooks.onRenderMinecraft(this.profiler);
     }
-
-    @Inject(method = "setCameraEntity", at = @At("HEAD"))
-    public void setCameraEntity(Entity entity, CallbackInfo ci) {
-        /*if (QuadzClient.getQuadcopterFromCamera().isEmpty() && entity instanceof Quadcopter quadcopter) {
-            ViewStack.getInstance().push(quadcopter.getView());
-        } else {
-            ViewStack.getInstance().pop();
-        }*/
-    }
-
 }

@@ -32,5 +32,4 @@ public class SplashResourceLoader implements SimpleSynchronousResourceReloadList
             }
         });
     }
-
 }

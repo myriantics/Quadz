@@ -44,7 +44,7 @@ public class ControllerConnectedToast implements Toast {
         guiGraphics.blit(BACKGROUND_SPRITE, 0, 0, 0, 0, width(), height());
         guiGraphics.drawString(font, message, 30, 7, -1);
         guiGraphics.drawString(font, Component.literal(controllerName), 30, 18, -1);
-        guiGraphics.renderFakeItem(new ItemStack(QuadzItems.REMOTE_ITEM), 8, 8);
+        guiGraphics.renderFakeItem(new ItemStack(QuadzItems.REMOTE), 8, 8);
 
         return startTime >= 5000L ? Visibility.HIDE : Visibility.SHOW;
     }

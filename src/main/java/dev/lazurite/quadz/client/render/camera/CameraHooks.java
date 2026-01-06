@@ -9,6 +9,8 @@ import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
 import dev.lazurite.quadz.common.registry.QuadzPackets;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -24,7 +26,7 @@ public class CameraHooks {
     }
 
     public static Optional<CameraType> onCycle() {
-        var player = Minecraft.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
 
         /*
             Check to make sure the conditions for player viewing haven't changed.
@@ -41,10 +43,12 @@ public class CameraHooks {
             }
         };
 
-        QuadzClient.getQuadcopterFromRemote().ifPresentOrElse(changeIndex,               // get quadcopter from remote or...
-                () -> QuadzClient.getQuadcopterFromCamera().ifPresentOrElse(changeIndex, // get quadcopter from camera or...
-                        () -> index = (index + 1) % 3)                                   // just do default behavior
-        );
+        @Nullable Quadcopter quadcopter = player.quadz$getActiveQuadcopter();
+        if (quadcopter != null) {
+            changeIndex.accept(quadcopter);
+        } else {
+            index = (index + 1) % 3;
+        }
 
         return switch (index) {
             case 0 -> Optional.of(CameraType.FIRST_PERSON);

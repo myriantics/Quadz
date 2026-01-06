@@ -1,5 +1,6 @@
 package dev.lazurite.quadz.client.render.screen.osd;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.Config;
@@ -7,8 +8,10 @@ import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.util.Search;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 
 public class OnScreenDisplay {
 
@@ -33,7 +36,10 @@ public class OnScreenDisplay {
     }
 
     public void renderSticks(PoseStack poseStack, float tickDelta) {
-        Search.forPlayer(quadcopter).ifPresent(player -> {
+
+        if (Minecraft.getInstance().cameraEntity == quadcopter) {
+            LocalPlayer player = Minecraft.getInstance().player;
+
             var pitch = player.quadz$getJoystickValue(QuadzCommon.locate("pitch"));
             var yaw = player.quadz$getJoystickValue(QuadzCommon.locate("yaw"));
             var roll = player.quadz$getJoystickValue(QuadzCommon.locate("roll"));
@@ -41,7 +47,8 @@ public class OnScreenDisplay {
             var width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             var height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             renderSticks(poseStack, tickDelta, width / 2, height - 75, 25, 5, pitch, yaw, roll, throttle);
-        });
+
+        }
     }
 
     public static void renderSticks(PoseStack poseStack, float tickDelta, int x, int y, int scale, int spacing, float pitch, float yaw, float roll, float throttle) {

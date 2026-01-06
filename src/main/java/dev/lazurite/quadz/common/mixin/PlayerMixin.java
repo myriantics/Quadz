@@ -1,10 +1,13 @@
 package dev.lazurite.quadz.common.mixin;
 
+import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.extension.PlayerExtension;
 import dev.lazurite.quadz.common.hooks.PlayerHooks;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Map;
 

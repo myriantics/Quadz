@@ -2,12 +2,14 @@ package dev.lazurite.quadz.client.render;
 
 import com.google.common.collect.Maps;
 import com.mojang.math.Axis;
+import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
 import dev.lazurite.quadz.common.util.JoystickOutput;
 import dev.lazurite.quadz.client.Config;
 import dev.lazurite.quadz.client.QuadzClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.profiling.ProfilerFiller;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.util.Map;
@@ -21,17 +23,18 @@ public class RenderHooks {
         var player = Minecraft.getInstance().player;
 
         if (Config.followLOS && player != null) {
-            QuadzClient.getQuadcopterFromRemote().ifPresent(quadcopter -> {
-                if (player.hasLineOfSight(quadcopter)) {
+            @Nullable Quadcopter activeQuadcopter = player.quadz$getActiveQuadcopter();
+            if (activeQuadcopter != null) {
+                if (player.hasLineOfSight(activeQuadcopter)) {
                     /* Get the difference in position between the player and the quadcopter */
                     var delta = Minecraft.getInstance().player.getEyePosition(tickDelta)
-                            .subtract(quadcopter.getPosition(tickDelta));
+                            .subtract(activeQuadcopter.getPosition(tickDelta));
 
                     /* Set new pitch and yaw */
-					player.setYRot((float) Math.toDegrees(Math.atan2(delta.z, delta.x)) + 90);
-					player.setXRot(20 + (float) Math.toDegrees(Math.atan2(delta.y, Math.sqrt(Math.pow(delta.x, 2) + Math.pow(delta.z, 2)))));
+                    player.setYRot((float) Math.toDegrees(Math.atan2(delta.z, delta.x)) + 90);
+                    player.setXRot(20 + (float) Math.toDegrees(Math.atan2(delta.y, Math.sqrt(Math.pow(delta.x, 2) + Math.pow(delta.z, 2)))));
                 }
-            });
+            }
         }
     }
 

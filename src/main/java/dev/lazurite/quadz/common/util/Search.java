@@ -1,5 +1,6 @@
 package dev.lazurite.quadz.common.util;
 
+import dev.lazurite.quadz.common.component.BindingComponent;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.registry.item.QuadzItems;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -63,31 +65,14 @@ public interface Search {
      * Finds a specific {@link Quadcopter} which is bound to the given bind ID.
      * @param level the level to search in
      * @param origin the point to search from
-     * @param bindId the bind id of the transmitter
      * @param range the maximum range
      * @return the bound {@link Quadcopter}
      */
-    static Optional<Quadcopter> forQuadWithBindId(Level level, Vec3 origin, int bindId, int range) {
+    static Optional<Quadcopter> forQuadWithBindId(Level level, Vec3 origin, UUID boundUUID, int range) {
         var entities = level.getEntities((Entity) null,
                 new AABB(BlockPos.containing(origin)).inflate(range),
-                entity -> entity instanceof Quadcopter quadcopter && quadcopter.getBindId() == bindId);
+                entity -> entity instanceof Quadcopter quadcopter && quadcopter.getUUID() == boundUUID);
         return entities.size() > 0 ? Optional.of((Quadcopter) entities.get(0)) : Optional.empty();
-    }
-
-    /**
-     * Finds the closest {@link Quadcopter} to the given origin.
-     * @param level the level to search in
-     * @param origin the point to search from
-     * @param range the maximum range
-     * @param predicate a predicate to narrow the search
-     * @return the nearest {@link Quadcopter}
-     */
-    static Optional<Quadcopter> forNearestQuad(Level level, Vec3 origin, int range, @Nullable Predicate<LivingEntity> predicate) {
-        return Optional.ofNullable(level.getNearestEntity(
-                Quadcopter.class,
-                TargetingConditions.DEFAULT.selector(predicate),
-                null, origin.x, origin.y, origin.z,
-                new AABB(BlockPos.containing(origin)).inflate(range)));
     }
 
     /**
@@ -98,12 +83,12 @@ public interface Search {
     static Optional<? extends Player> forPlayer(Quadcopter quadcopter) {
         if (quadcopter.level().isClientSide()) {
             return quadcopter.level().players().stream()
-                    .filter(player -> player.getMainHandItem().is(QuadzItems.REMOTE_ITEM) && player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1) == quadcopter.getBindId())
+                    .filter(player -> player.getMainHandItem().is(QuadzItems.REMOTE) && player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).boundUUID() == quadcopter.getUUID())
                     .findFirst();
         }
 
         return PlayerLookup.tracking(quadcopter)
-                .stream().filter(player -> player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1) == quadcopter.getBindId())
+                .stream().filter(player -> player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).boundUUID() == quadcopter.getUUID())
                 .findFirst();
     }
 

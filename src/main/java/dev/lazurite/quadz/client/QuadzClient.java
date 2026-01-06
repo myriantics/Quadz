@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -33,23 +34,6 @@ public class QuadzClient implements ClientModInitializer {
                 .filter(view -> view instanceof QuadcopterView)
                 .map(view -> ((QuadcopterView) view).getQuadcopter());
          */
-    }
-
-    /**
-     * Finds the player's quadcopter based on its held remote.
-     * <p>
-     * Only works if it's within a 256 block radius.
-     */
-    public static Optional<Quadcopter> getQuadcopterFromRemote() {
-        var player = Minecraft.getInstance().player;
-
-        if (player != null) {
-            return player.getMainHandItem().has(QuadzDataComponentTypes.BOUND_ID)
-                    ? Search.forQuadWithBindId(player.level(), player.position(), player.getMainHandItem().get(QuadzDataComponentTypes.BOUND_ID), 256)
-                    : Optional.empty();
-        }
-
-        return Optional.empty();
     }
 
     @Override

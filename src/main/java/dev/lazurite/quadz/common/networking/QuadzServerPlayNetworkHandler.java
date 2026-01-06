@@ -1,5 +1,6 @@
 package dev.lazurite.quadz.common.networking;
 
+import dev.lazurite.quadz.common.component.BindingComponent;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
@@ -7,17 +8,15 @@ import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.util.Search;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 public abstract class QuadzServerPlayNetworkHandler {
 
@@ -47,14 +46,14 @@ public abstract class QuadzServerPlayNetworkHandler {
                 } else {
                     ItemStack mainHandItem = serverPlayer.getMainHandItem();
 
-                    if (mainHandItem.has(QuadzDataComponentTypes.BINDABLE)) {
-                        int boundId = mainHandItem.getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1);
+                    if (mainHandItem.has(QuadzDataComponentTypes.BINDING)) {
+                        @Nullable UUID boundUUID = mainHandItem.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).boundUUID();
 
-                        if (boundId != -1) {
+                        if (boundUUID != null) {
                             Search.forQuadWithBindId(
                                             serverPlayer.level(),
                                             serverPlayer.getCamera().position(),
-                                            boundId,
+                                            boundUUID,
                                             server.getPlayerList().getViewDistance() * 16)
                                     .ifPresentOrElse(entity -> {
                                         serverPlayer.setCamera(entity);

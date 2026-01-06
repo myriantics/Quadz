@@ -1,6 +1,8 @@
 package dev.lazurite.quadz.common.extension;
 
+import dev.lazurite.quadz.common.entity.Quadcopter;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

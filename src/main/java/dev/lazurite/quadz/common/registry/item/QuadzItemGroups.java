@@ -15,11 +15,11 @@ import java.util.function.Consumer;
 public abstract class QuadzItemGroups {
     public static final CreativeModeTab QUADZ = register("quadz", builder -> builder
             .title(Component.literal("Quadz"))
-            .icon(() -> new ItemStack(QuadzItems.REMOTE_ITEM))
+            .icon(() -> new ItemStack(QuadzItems.REMOTE))
             .displayItems((parameters, output) -> {
-                output.accept(QuadzItems.GOGGLES_ITEM);
-                output.accept(QuadzItems.QUADCOPTER_ITEM);
-                output.accept(QuadzItems.REMOTE_ITEM);
+                output.accept(QuadzItems.GOGGLES);
+                output.accept(QuadzItems.QUADCOPTER);
+                output.accept(QuadzItems.REMOTE);
             })
     );
 

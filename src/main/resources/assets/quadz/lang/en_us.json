@@ -5,7 +5,11 @@
   "item.quadz.goggles" : "Goggles",
   "item.quadz.remote" : "Remote",
 
-  "quadz.message.bound" : "Quadcopter Bound",
+  "quadz.tooltip.component.binding.unbound": "Unbound",
+  "quadz.tooltip.component.binding.bound": "Bound to: %s",
+
+  "quadz.message.entity_bound" : "%s Bound",
+  "quadz.message.binding_cleared" : "Binding Cleared",
 
   "quadz.config.title" : "Quadz Config",
 

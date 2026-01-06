@@ -2,45 +2,47 @@ package dev.lazurite.quadz.common.entity;
 
 import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.common.registry.QuadzDamageTypes;
-import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.common.item.GogglesItem;
-import dev.lazurite.quadz.common.item.RemoteItem;
 import dev.lazurite.quadz.common.util.BetaflightHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
-public class Quadcopter extends LivingEntity {
+public class Quadcopter extends LivingEntity implements TraceableEntity {
 
     public static final EntityDataAccessor<String> TEMPLATE = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> PREV_TEMPLATE = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> ARMED = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Integer> BIND_ID = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> CAMERA_ANGLE = SynchedEntityData.defineId(Quadcopter.class, EntityDataSerializers.INT);
+
+    private ItemStack quadcopterStack = new ItemStack(QuadzItems.QUADCOPTER);
+    private @Nullable UUID ownerUUID = null;
+    private Entity cachedOwner = null;
 
     public Quadcopter(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
         this.noCulling = true;
+    }
+
+    public void setQuadcopterStack(ItemStack quadcopterStack) {
+        this.quadcopterStack = quadcopterStack;
     }
 
     @Override
@@ -169,26 +171,8 @@ public class Quadcopter extends LivingEntity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!level().isClientSide()) {
-            final var stack = player.getInventory().getSelected();
-
-            if (stack.getItem() instanceof RemoteItem) {
-
-                if (stack.has(QuadzDataComponentTypes.BINDABLE)) {
-                    this.setBindId(stack.getOrDefault(QuadzDataComponentTypes.BOUND_ID, -1));
-                }
-                player.displayClientMessage(Component.translatable("quadz.message.bound"), true);
-            }
-        }
-
-        return InteractionResult.SUCCESS;
-    }
-
-    @Override
     public void kill() {
-        var itemStack = new ItemStack(QuadzItems.QUADCOPTER_ITEM);
-        itemStack.set(QuadzDataComponentTypes.BOUND_ID, this.getBindId());
+        var itemStack = new ItemStack(QuadzItems.QUADCOPTER);
         this.spawnAtLocation(itemStack);
         this.remove(RemovalReason.KILLED);
     }
@@ -207,15 +191,19 @@ public class Quadcopter extends LivingEntity {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         getEntityData().set(TEMPLATE, tag.getString("template"));
-        getEntityData().set(BIND_ID, tag.getInt("bind_id"));
         getEntityData().set(CAMERA_ANGLE, tag.getInt("camera_angle"));
+        if (tag.contains("owner")) {
+            this.ownerUUID = tag.getUUID("owner");
+        }
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putInt("bind_id", getEntityData().get(BIND_ID));
         tag.putInt("camera_angle", getEntityData().get(CAMERA_ANGLE));
+        if (this.ownerUUID != null) {
+            tag.putUUID("owner", this.ownerUUID);
+        }
     }
 
     @Override
@@ -224,7 +212,6 @@ public class Quadcopter extends LivingEntity {
         builder.define(TEMPLATE, "");
         builder.define(PREV_TEMPLATE, "");
         builder.define(ARMED, false);
-        builder.define(BIND_ID, 0);
         builder.define(CAMERA_ANGLE, 0);
     }
 
@@ -263,14 +250,6 @@ public class Quadcopter extends LivingEntity {
         return null;
     }
 
-    public void setBindId(int bindId) {
-        this.getEntityData().set(BIND_ID, bindId);
-    }
-
-    public int getBindId() {
-        return this.getEntityData().get(BIND_ID);
-    }
-
     public void setArmed(boolean armed) {
         this.getEntityData().set(ARMED, armed);
     }
@@ -279,4 +258,15 @@ public class Quadcopter extends LivingEntity {
         return this.getEntityData().get(ARMED);
     }
 
+    @Override
+    public @Nullable Entity getOwner() {
+        if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
+            return this.cachedOwner;
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel serverLevel) {
+            this.cachedOwner = serverLevel.getEntity(this.ownerUUID);
+            return this.cachedOwner;
+        } else {
+            return null;
+        }
+    }
 }

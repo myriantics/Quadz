@@ -4,6 +4,7 @@
   "package": "dev.lazurite.quadz.common.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ItemStackMixin",
     "PlayerMixin",
     "ServerPlayerMixin"
   ],

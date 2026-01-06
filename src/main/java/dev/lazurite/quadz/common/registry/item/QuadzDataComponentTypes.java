@@ -2,9 +2,9 @@ package dev.lazurite.quadz.common.registry.item;
 
 import com.mojang.serialization.Codec;
 import dev.lazurite.quadz.QuadzCommon;
+import dev.lazurite.quadz.common.component.BindingComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -14,15 +14,11 @@ import java.util.function.UnaryOperator;
 
 public abstract class QuadzDataComponentTypes {
 
-    public static final DataComponentType<Unit> BINDABLE = registerUnit(
-            "bindable"
-    );
-
-    public static final DataComponentType<Integer> BOUND_ID = register(
+    public static final DataComponentType<BindingComponent> BINDING = register(
             "bound_id",
             integerBuilder -> integerBuilder
-                    .persistent(Codec.INT)
-                    .networkSynchronized(ByteBufCodecs.INT)
+                    .persistent(BindingComponent.CODEC.codec())
+                    .networkSynchronized(BindingComponent.PACKET_CODEC)
     );
 
     public static void init() {

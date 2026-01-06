@@ -3,9 +3,9 @@
   "package": "dev.lazurite.quadz.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ItemStackMixin",
-    "PlayerMixin",
-    "ServerPlayerMixin"
+    "minecraft.ItemStackMixin",
+    "minecraft.PlayerMixin",
+    "minecraft.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

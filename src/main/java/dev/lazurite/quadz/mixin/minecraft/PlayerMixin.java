@@ -1,4 +1,4 @@
-package dev.lazurite.quadz.mixin;
+package dev.lazurite.quadz.mixin.minecraft;
 
 import dev.lazurite.quadz.component.BindingComponent;
 import dev.lazurite.quadz.entity.quadcopter.Quadcopter;
@@ -35,6 +35,11 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerExtensio
     @Override
     public @Nullable Quadcopter quadz$getActiveQuadcopter() {
         return this.quadz$activeQuadcopter;
+    }
+
+    @Override
+    public void quadz$clearActiveQuadcopter() {
+        this.quadz$activeQuadcopter = null;
     }
 
     @Inject(

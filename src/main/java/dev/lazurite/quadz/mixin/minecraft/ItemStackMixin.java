@@ -1,4 +1,4 @@
-package dev.lazurite.quadz.mixin;
+package dev.lazurite.quadz.mixin.minecraft;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.lazurite.quadz.registry.item.QuadzDataComponentTypes;

@@ -7,4 +7,7 @@ public interface PlayerExtension {
     default @Nullable Quadcopter quadz$getActiveQuadcopter() {
         return null;
     }
+
+    default void quadz$clearActiveQuadcopter() {
+    }
 }

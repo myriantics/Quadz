@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a held "Transmitter" or remote for controlling a quadcopter.
@@ -29,6 +30,12 @@ public class RemoteItem extends Item {
         ItemStack usedStack = player.getItemInHand(interactionHand);
 
         if (player.isCrouching()) {
+            BindingComponent original = usedStack.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND);
+            @Nullable Quadcopter quadcopter = player.quadz$getActiveQuadcopter();
+            if (quadcopter != null && quadcopter.getUUID().equals(original.boundUUID())) {
+                player.quadz$clearActiveQuadcopter();
+            }
+
             if (!level.isClientSide()) {
                 usedStack.set(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND);
                 player.displayClientMessage(Component.translatable("quadz.message.binding_cleared"), true);

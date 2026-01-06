@@ -1,4 +1,4 @@
-package dev.lazurite.quadz.mixin;
+package dev.lazurite.quadz.mixin.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import dev.lazurite.quadz.hooks.PlayerHooks;

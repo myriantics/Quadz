@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class QuadcopterInterface {
 
-    private ControllerSim controllerSim = new ControllerSim();
+    private final ControllerSim controllerSim = new ControllerSim();
 
     private boolean enabled = false;
 

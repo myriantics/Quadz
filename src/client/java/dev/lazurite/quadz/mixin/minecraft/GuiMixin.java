@@ -3,7 +3,9 @@ package dev.lazurite.quadz.mixin.minecraft;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.lazurite.quadz.QuadzClient;
+import dev.lazurite.quadz.extension.MinecraftExtension;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,8 +26,8 @@ public abstract class GuiMixin {
     @WrapMethod(
             method = "renderCrosshair"
     )
-    private void renderCrosshair$HEAD(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Operation<Void> original) {
-        if (QuadzClient.getQuadcopterFromCamera().isEmpty()) {
+    private void quadz$disableCrosshairIfInterfaceActive(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Operation<Void> original) {
+        if (!((MinecraftExtension) Minecraft.getInstance()).quadz$getQuadcopterInterface().isEnabled()) {
             original.call(guiGraphics, deltaTracker);
         }
     }
@@ -33,8 +35,8 @@ public abstract class GuiMixin {
     @WrapMethod(
             method = "renderExperienceBar"
     )
-    public void renderExperienceBar$HEAD(GuiGraphics guiGraphics, int i, Operation<Void> original) {
-        if (QuadzClient.getQuadcopterFromCamera().isEmpty()) {
+    public void quadz$disableExperienceBarIfInterfaceActive(GuiGraphics guiGraphics, int i, Operation<Void> original) {
+        if (!((MinecraftExtension) Minecraft.getInstance()).quadz$getQuadcopterInterface().isEnabled()) {
             original.call(guiGraphics, i);
         }
     }

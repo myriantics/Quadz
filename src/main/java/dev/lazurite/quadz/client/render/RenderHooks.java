@@ -2,7 +2,7 @@ package dev.lazurite.quadz.client.render;
 
 import com.google.common.collect.Maps;
 import com.mojang.math.Axis;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
 import dev.lazurite.quadz.common.util.JoystickOutput;
 import dev.lazurite.quadz.client.Config;

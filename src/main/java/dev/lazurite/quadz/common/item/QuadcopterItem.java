@@ -1,22 +1,16 @@
 package dev.lazurite.quadz.common.item;
 
-import dev.lazurite.quadz.common.component.BindingComponent;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import dev.lazurite.quadz.common.registry.QuadzEntityTypes;
-import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.client.render.entity.QuadcopterEntityRenderer;
-import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-
-import java.util.Random;
 
 /**
  * Represents a quadcopter, allows the player to spawn with right-click on the ground.

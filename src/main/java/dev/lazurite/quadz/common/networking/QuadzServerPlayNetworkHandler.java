@@ -1,7 +1,8 @@
 package dev.lazurite.quadz.common.networking;
 
 import dev.lazurite.quadz.common.component.BindingComponent;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
+import dev.lazurite.quadz.common.networking.c2s.ControllerInputC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
@@ -19,12 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class QuadzServerPlayNetworkHandler {
-
-    public static void onJoystickInput(JoystickInputC2SPacket packet, ServerPlayNetworking.Context context) {
-        for (ResourceLocation id : packet.values().keySet()) {
-            context.player().quadz$setJoystickValue(id, packet.values().get(id));
-        }
-    }
 
     public static void onPlayerViewRequestReceived(RequestPlayerViewC2SPacket packet, ServerPlayNetworking.Context context) {
         ServerPlayer serverPlayer = context.player();
@@ -67,5 +62,14 @@ public abstract class QuadzServerPlayNetworkHandler {
                 }
             });
         });
+    }
+
+    public static void onControllerInput(ControllerInputC2SPacket controllerInputC2SPacket, ServerPlayNetworking.Context context) {
+        ServerPlayer serverPlayer = context.player();
+        @Nullable Quadcopter quadcopter = serverPlayer.quadz$getActiveQuadcopter();
+
+        if (quadcopter != null) {
+            quadcopter.controller.update(controllerInputC2SPacket);
+        }
     }
 }

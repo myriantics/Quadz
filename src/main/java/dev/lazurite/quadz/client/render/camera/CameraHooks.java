@@ -1,12 +1,10 @@
 package dev.lazurite.quadz.client.render.camera;
 
-import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.QuadzClient;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
-import dev.lazurite.quadz.common.registry.QuadzPackets;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

@@ -1,15 +1,12 @@
 package dev.lazurite.quadz.common.registry;
 
 import dev.lazurite.quadz.QuadzCommon;
-import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworkHandler;
-import dev.lazurite.quadz.common.networking.QuadzServerPlayNetworkHandler;
+import dev.lazurite.quadz.common.networking.c2s.ControllerInputC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.RequestPlayerViewC2SPacket;
 import dev.lazurite.quadz.common.networking.c2s.RequestQuadcopterViewC2SPacket;
 import dev.lazurite.quadz.common.networking.s2c.JoystickInputS2CPacket;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -18,10 +15,12 @@ import net.minecraft.resources.ResourceLocation;
 public abstract class QuadzPackets {
     // c2s
     public static final ResourceLocation JOYSTICK_INPUT_C2S = locateC2S("joystick_input");
-    // s2c
-    public static final ResourceLocation JOYSTICK_INPUT_S2C = locateS2C("joystick_input");
     public static final ResourceLocation REQUEST_QUADCOPTER_VIEW_C2S = locateC2S("request_quadcopter_view");
     public static final ResourceLocation REQUEST_PLAYER_VIEW_C2S = locateC2S("request_player_view");
+    public static final ResourceLocation CONTROLLER_INPUT_C2S = locateC2S("controller_input");
+
+    // s2c
+    public static final ResourceLocation JOYSTICK_INPUT_S2C = locateS2C("joystick_input");
 
     public static void init() {
         initC2S();
@@ -33,6 +32,7 @@ public abstract class QuadzPackets {
         registerC2S(JoystickInputC2SPacket.TYPE, JoystickInputC2SPacket.PACKET_CODEC);
         registerC2S(RequestQuadcopterViewC2SPacket.TYPE, RequestQuadcopterViewC2SPacket.PACKET_CODEC);
         registerC2S(RequestPlayerViewC2SPacket.TYPE, RequestPlayerViewC2SPacket.PACKET_CODEC);
+        registerC2S(ControllerInputC2SPacket.TYPE, ControllerInputC2SPacket.PACKET_CODEC);
     }
 
     private static void initS2C() {

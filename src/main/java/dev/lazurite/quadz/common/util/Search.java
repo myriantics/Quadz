@@ -1,7 +1,7 @@
 package dev.lazurite.quadz.common.util;
 
 import dev.lazurite.quadz.common.component.BindingComponent;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -9,19 +9,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**

@@ -53,8 +53,6 @@ public class ClientEventHooks {
         final var client = Minecraft.getInstance();
 
         if (!client.isPaused()) {
-            client.player.quadz$syncJoystick();
-
             if (client.options.keyShift.isDown() && QuadzClient.getQuadcopterFromCamera().isPresent()) {
                 client.options.getCameraType().quadz$reset();
             }
@@ -63,9 +61,9 @@ public class ClientEventHooks {
 
     public static void onPostLogin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
         if (minecraft.player != null) {
-            minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("rate"), Config.rate);
-            minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("super_rate"), Config.superRate);
-            minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("expo"), Config.expo);
+            //minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("rate"), Config.rate);
+            //minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("super_rate"), Config.superRate);
+            //minecraft.player.quadz$setJoystickValue(QuadzCommon.locate("expo"), Config.expo);
         }
     }
 }

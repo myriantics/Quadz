@@ -1,7 +1,7 @@
 package dev.lazurite.quadz.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

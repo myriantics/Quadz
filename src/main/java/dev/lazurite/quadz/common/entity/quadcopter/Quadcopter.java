@@ -1,4 +1,4 @@
-package dev.lazurite.quadz.common.entity;
+package dev.lazurite.quadz.common.entity.quadcopter;
 
 import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.common.component.BindingComponent;
@@ -9,7 +9,6 @@ import dev.lazurite.quadz.common.registry.item.QuadzItems;
 import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.common.item.GogglesItem;
 import dev.lazurite.quadz.common.util.BetaflightHelper;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,7 +21,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,6 +44,8 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
     private ItemStack quadcopterStack = new ItemStack(QuadzItems.QUADCOPTER);
     private @Nullable UUID ownerUUID = null;
     private Entity cachedOwner = null;
+
+    public final QuadcopterController controller = new QuadcopterController();
 
     public Quadcopter(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
@@ -99,7 +99,6 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
 
         Search.forPlayer(this).ifPresentOrElse(player -> {
             this.setArmed(true);
-            player.quadz$syncJoystick();
 
             /*
             if (player instanceof ServerPlayer serverPlayer && serverPlayer.getCamera() == this && !player.equals(this.getRigidBody().getPriorityPlayer())) {
@@ -107,20 +106,7 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
             }
              */
 
-            var pitch = player.quadz$getJoystickValue(QuadzCommon.locate("pitch"));
-            var yaw = -1 * player.quadz$getJoystickValue(QuadzCommon.locate("yaw"));
-            var roll = player.quadz$getJoystickValue(QuadzCommon.locate("roll"));
-            var throttle = player.quadz$getJoystickValue(QuadzCommon.locate("throttle")) + 1.0f;
-
-            var rate = player.quadz$getJoystickValue(QuadzCommon.locate("rate"));
-            var superRate = player.quadz$getJoystickValue(QuadzCommon.locate("super_rate"));
-            var expo = player.quadz$getJoystickValue(QuadzCommon.locate("expo"));
-
-            this.rotate(
-                    (float) BetaflightHelper.calculateRates(pitch, rate, expo, superRate, 0.05f),
-                    (float) BetaflightHelper.calculateRates(yaw, rate, expo, superRate, 0.05f),
-                    (float) BetaflightHelper.calculateRates(roll, rate, expo, superRate, 0.05f)
-            );
+            this.addDeltaMovement(this.getLookAngle().normalize().multiply(this.controller.throttle, this.controller.throttle, this.controller.throttle));
 
             /*
             // Decrease angular velocity
@@ -199,9 +185,6 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
         rot.rotateY(y);
         rot.rotateZ(z);
         /*
-        QuaternionHelper.rotateX(rot, x);
-        QuaternionHelper.rotateY(rot, y);
-        QuaternionHelper.rotateZ(rot, z);
 
         var trans = getRigidBody().getTransform(new Transform());
         trans.getRotation().set(trans.getRotation().mult(Convert.toBullet(rot)));

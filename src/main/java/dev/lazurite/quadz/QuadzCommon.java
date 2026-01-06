@@ -1,5 +1,6 @@
 package dev.lazurite.quadz;
 
+import dev.lazurite.quadz.common.networking.QuadzServerPlayNetworking;
 import dev.lazurite.quadz.common.registry.*;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
 import dev.lazurite.quadz.common.registry.item.QuadzItemGroups;
@@ -26,6 +27,9 @@ public class QuadzCommon implements ModInitializer {
         QuadzPackets.init();
         QuadzDamageTypes.init();
         QuadzDataComponentTypes.init();
+
+        // Networking
+        QuadzServerPlayNetworking.initC2SRecievers();
 
         // Events
         // TemplateEvents.ENTITY_TEMPLATE_CHANGED.register(ServerEventHooks::onEntityTemplateChanged);

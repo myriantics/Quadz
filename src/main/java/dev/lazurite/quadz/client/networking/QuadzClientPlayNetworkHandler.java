@@ -14,11 +14,4 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class QuadzClientPlayNetworkHandler {
-    public static void onJoystickInput(JoystickInputS2CPacket payload, ClientPlayNetworking.Context context) {
-        if (context.client().level != null && context.client().player == context.client().level.getEntity(payload.playerId())) {
-            for (ResourceLocation id : payload.values().keySet()) {
-                context.player().quadz$setJoystickValue(id, payload.values().get(id));
-            }
-        }
-    }
 }

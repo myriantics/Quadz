@@ -4,11 +4,9 @@ import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
 import dev.lazurite.quadz.client.render.entity.QuadcopterEntityRenderer;
 import dev.lazurite.quadz.common.registry.QuadzEntityTypes;
 import dev.lazurite.quadz.common.registry.QuadzEvents;
-import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
-import dev.lazurite.quadz.common.util.Search;
 import dev.lazurite.quadz.client.event.ClientEventHooks;
 import dev.lazurite.quadz.client.resource.SplashResourceLoader;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -16,7 +14,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 

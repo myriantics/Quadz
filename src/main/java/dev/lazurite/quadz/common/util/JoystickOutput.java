@@ -29,24 +29,24 @@ public interface JoystickOutput {
 
     static float getAxisValue(@Nullable Player player, int axis, ResourceLocation resourceLocation, boolean inverted, boolean halved) {
         var deadzone = Config.deadzone;
-        var value = 0.0f;
+        float value = 0.0f;
 
         if (glfwJoystickPresent(Config.controllerId)) {
             value = glfwGetJoystickAxes(Config.controllerId).duplicate().get(axis);
 
             value = inverted ? -value : value;
 
-            value = halved ? value >= 0.0f ? value * 2.0f - 1.0f : -1.0f : value;
+            if (halved) {
+                value = value >= 0.0f ? value * 2.0f - 1.0f : -1.0f;
+            }
 
-            value = deadzone != 0 && value < deadzone * 0.5f && value > -deadzone * 0.5f ? 0.0f : value;
-        }
+            value = halved
+                    ? value >= 0.0f ? value * 2.0f - 1.0f : -1.0f
+                    : value;
 
-        if (player != null && player.level().isClientSide()) {
-            /* Queue for transmission to the server */
-            player.quadz$setJoystickValue(resourceLocation, value);
-        } else if (player != null && !player.level().isClientSide()) {
-            /* Server-side retrieval */
-            return player.quadz$getJoystickValue(resourceLocation);
+            if (deadzone != 0 && value < deadzone * 0.5f && value > -deadzone * 0.5f) {
+                value = 0.0f;
+            }
         }
 
         return value;

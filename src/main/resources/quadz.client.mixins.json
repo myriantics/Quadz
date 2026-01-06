@@ -7,7 +7,6 @@
     "CameraTypeMixin",
     "GameRendererMixin",
     "GuiMixin",
-    "LocalPlayerMixin",
     "MinecraftMixin",
     "PauseScreenMixin",
     "TitleScreenMixin"

@@ -17,7 +17,6 @@ public abstract class QuadzClientPlayNetworking {
     }
 
     public static void initS2CRecievers() {
-        ClientPlayNetworking.registerGlobalReceiver(JoystickInputS2CPacket.TYPE, QuadzClientPlayNetworkHandler::onJoystickInput);
         QuadzCommon.LOGGER.info("Initialized Quadz' S2C Packet Recievers!");
     }
 }

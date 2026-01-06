@@ -1,17 +1,11 @@
 package dev.lazurite.quadz.client.render.screen.osd;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.quadz.QuadzCommon;
-import dev.lazurite.quadz.client.Config;
-import dev.lazurite.quadz.common.entity.Quadcopter;
-import dev.lazurite.quadz.common.util.Search;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 
 public class OnScreenDisplay {
 
@@ -40,13 +34,13 @@ public class OnScreenDisplay {
         if (Minecraft.getInstance().cameraEntity == quadcopter) {
             LocalPlayer player = Minecraft.getInstance().player;
 
-            var pitch = player.quadz$getJoystickValue(QuadzCommon.locate("pitch"));
-            var yaw = player.quadz$getJoystickValue(QuadzCommon.locate("yaw"));
-            var roll = player.quadz$getJoystickValue(QuadzCommon.locate("roll"));
-            var throttle = (player.quadz$getJoystickValue(QuadzCommon.locate("throttle")) + 1.0f);
+            // var pitch = player.quadz$getJoystickValue(QuadzCommon.locate("pitch"));
+            // var yaw = player.quadz$getJoystickValue(QuadzCommon.locate("yaw"));
+            // var roll = player.quadz$getJoystickValue(QuadzCommon.locate("roll"));
+            // var throttle = (player.quadz$getJoystickValue(QuadzCommon.locate("throttle")) + 1.0f);
             var width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             var height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-            renderSticks(poseStack, tickDelta, width / 2, height - 75, 25, 5, pitch, yaw, roll, throttle);
+            renderSticks(poseStack, tickDelta, width / 2, height - 75, 25, 5, /*pitch, yaw, roll, throttle*/0, 0, 0, 0);
 
         }
     }

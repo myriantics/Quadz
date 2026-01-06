@@ -1,14 +1,10 @@
 package dev.lazurite.quadz.common.hooks;
 
-import dev.lazurite.quadz.QuadzCommon;
 import dev.lazurite.quadz.client.networking.QuadzClientPlayNetworking;
-import dev.lazurite.quadz.common.entity.Quadcopter;
+import dev.lazurite.quadz.common.entity.quadcopter.Quadcopter;
 import dev.lazurite.quadz.common.networking.QuadzServerPlayNetworking;
 import dev.lazurite.quadz.common.networking.c2s.JoystickInputC2SPacket;
 import dev.lazurite.quadz.common.networking.s2c.JoystickInputS2CPacket;
-import dev.lazurite.quadz.common.registry.QuadzPackets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

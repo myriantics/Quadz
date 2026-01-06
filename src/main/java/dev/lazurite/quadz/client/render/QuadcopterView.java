@@ -1,16 +1,5 @@
 package dev.lazurite.quadz.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import dev.lazurite.quadz.QuadzCommon;
-import dev.lazurite.quadz.client.Config;
-import dev.lazurite.quadz.client.render.screen.osd.OnScreenDisplay;
-import dev.lazurite.quadz.common.entity.Quadcopter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
-
 public class QuadcopterView/* extends View implements View.Ticking*/ {
 /*
     private static final ManagedShaderEffect STATIC_SHADER = ShaderEffectManager.getInstance().manage(new ResourceLocation(QuadzCommon.MOD_ID, "shaders/post/static.json"));

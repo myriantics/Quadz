@@ -28,9 +28,10 @@ public class RemoteItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack usedStack = player.getItemInHand(interactionHand);
+        BindingComponent original = usedStack.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND);
 
+        int fart = 0;
         if (player.isCrouching()) {
-            BindingComponent original = usedStack.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND);
             @Nullable Quadcopter quadcopter = player.quadz$getActiveQuadcopter();
             if (quadcopter != null && quadcopter.getUUID().equals(original.boundUUID())) {
                 player.quadz$clearActiveQuadcopter();
@@ -41,6 +42,7 @@ public class RemoteItem extends Item {
                 player.displayClientMessage(Component.translatable("quadz.message.binding_cleared"), true);
             }
         }
+
         return InteractionResultHolder.success(usedStack);
     }
 

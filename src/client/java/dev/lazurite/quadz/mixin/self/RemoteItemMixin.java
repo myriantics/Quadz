@@ -1,7 +1,10 @@
 package dev.lazurite.quadz.mixin.self;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import dev.lazurite.quadz.component.BindingComponent;
 import dev.lazurite.quadz.entity.quadcopter.Quadcopter;
 import dev.lazurite.quadz.item.RemoteItem;
+import dev.lazurite.quadz.registry.item.QuadzDataComponentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -25,8 +28,13 @@ public abstract class RemoteItemMixin extends Item {
             method = "use",
             at = @At(value = "RETURN")
     )
-    private void quadz$swapCameras(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
-        if (player instanceof LocalPlayer) {
+    private void quadz$swapCameras(
+            Level level,
+            Player player,
+            InteractionHand interactionHand,
+            CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir
+    ) {
+        if (player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).isBound() && player instanceof LocalPlayer) {
             Minecraft minecraft = Minecraft.getInstance();
 
             switch (Minecraft.getInstance().getCameraEntity()) {

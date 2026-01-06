@@ -78,18 +78,23 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
                 }
             }
              */
-            // Hurt entities on collision
-            this.level().getEntities(this, this.getBoundingBox(), entity -> entity instanceof LivingEntity).forEach(entity -> {
+            float damage = Math.clamp((float) this.getDeltaMovement().length() / 2f, 0f, 20f);
 
-                entity.hurt(
-                        this.level().damageSources().source(
-                                QuadzDamageTypes.QUADCOPTER,
-                                this.getOwner(),
-                                this
-                        ),
-                        2.0f
-                );
-            });
+            if (damage > 0.5) {
+                // Hurt entities on collision
+                this.level().getEntities(this, this.getBoundingBox(), entity -> entity instanceof LivingEntity).forEach(entity -> {
+                    if (entity != this.getOwner()) {
+                        entity.hurt(
+                                this.level().damageSources().source(
+                                        this.getDeltaMovement().y > 0 ? QuadzDamageTypes.QUADCOPTER : QuadzDamageTypes.DIVEBOMBING,
+                                        this.getOwner(),
+                                        this
+                                ),
+                                damage
+                        );
+                    }
+                });
+            }
         }
 
         Search.forPlayer(this).ifPresentOrElse(player -> {

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Quadcopter extends LivingEntity implements TraceableEntity {
@@ -70,7 +71,7 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
 
             // Hurt entities on collision
             this.level().getEntities(this, this.getBoundingBox(), entity -> entity instanceof LivingEntity).forEach(entity -> {
-                entity.hurt(level().damageSources().source(QuadzDamageTypes.QUADCOPTER), 2.0f);
+                entity.hurt(level().damageSources().source(QuadzDamageTypes.DIVEBOMBING), 2.0f);
             });
         }
 
@@ -172,8 +173,7 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
 
     @Override
     public void kill() {
-        var itemStack = new ItemStack(QuadzItems.QUADCOPTER);
-        this.spawnAtLocation(itemStack);
+        this.spawnAtLocation(this.quadcopterStack);
         this.remove(RemovalReason.KILLED);
     }
 
@@ -188,12 +188,21 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
     }
 
     @Override
+    public @Nullable ItemStack getPickResult() {
+        return this.quadcopterStack.copyWithCount(1);
+    }
+
+    @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         getEntityData().set(TEMPLATE, tag.getString("template"));
         getEntityData().set(CAMERA_ANGLE, tag.getInt("camera_angle"));
         if (tag.contains("owner")) {
             this.ownerUUID = tag.getUUID("owner");
+        }
+        if (tag.contains("quadcopter_stack")) {
+            Optional<ItemStack> quadStack = ItemStack.parse(this.registryAccess(), tag.getCompound("quadcopter_stack"));
+            quadStack.ifPresent(this::setQuadcopterStack);
         }
     }
 
@@ -204,6 +213,10 @@ public class Quadcopter extends LivingEntity implements TraceableEntity {
         if (this.ownerUUID != null) {
             tag.putUUID("owner", this.ownerUUID);
         }
+        tag.put(
+                "quadcopter_stack",
+                this.quadcopterStack.save(this.registryAccess(), new CompoundTag())
+        );
     }
 
     @Override

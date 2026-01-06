@@ -31,3 +31,5 @@ logs/
 lib/
 
 local.settings.gradle
+/fabricloader.log
+/src/main/generated/.cache/

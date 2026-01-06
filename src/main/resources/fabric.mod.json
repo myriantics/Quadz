@@ -7,7 +7,12 @@
     "main": [
       "dev.lazurite.quadz.QuadzCommon"
     ],
-    "client": [ "dev.lazurite.quadz.client.QuadzClient" ]
+    "client": [
+      "dev.lazurite.quadz.client.QuadzClient"
+    ],
+    "fabric-datagen": [
+      "dev.lazurite.quadz.QuadzDataGenerator"
+    ]
   },
   "mixins": [
     {

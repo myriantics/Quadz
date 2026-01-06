@@ -25,8 +25,7 @@ public abstract class MinecraftMixin {
 
     @Unique
     private final ControllerSim quadz$controllerSim = new ControllerSim(
-            (Minecraft) (Object) this,
-            options
+            (Minecraft) (Object) this
     );
 
     @Inject(

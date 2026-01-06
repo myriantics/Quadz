@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PauseScreen.class)
-public class PauseScreenMixin {
+public abstract class PauseScreenMixin {
 
     @Inject(method = "createPauseMenu", at = @At("TAIL"))
     public void createPauseScreen$TAIL(CallbackInfo ci) {

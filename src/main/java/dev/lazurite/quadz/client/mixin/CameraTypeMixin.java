@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CameraType.class)
-public class CameraTypeMixin implements CameraTypeExtension {
+public abstract class CameraTypeMixin implements CameraTypeExtension {
 
     @Inject(method = "cycle", at = @At("HEAD"), cancellable = true)
     public void cycle$HEAD(CallbackInfoReturnable<CameraType> cir) {

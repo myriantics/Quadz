@@ -26,14 +26,7 @@ public class QuadzClient implements ClientModInitializer {
      * Finds the player's quadcopter based on its camera view.
      */
     public static Optional<Quadcopter> getQuadcopterFromCamera() {
-        return Optional.empty();
-
-        /*
-        return ViewStack.getInstance()
-                .peek()
-                .filter(view -> view instanceof QuadcopterView)
-                .map(view -> ((QuadcopterView) view).getQuadcopter());
-         */
+        return Minecraft.getInstance().cameraEntity instanceof Quadcopter quadcopter ? Optional.of(quadcopter) : Optional.empty();
     }
 
     @Override

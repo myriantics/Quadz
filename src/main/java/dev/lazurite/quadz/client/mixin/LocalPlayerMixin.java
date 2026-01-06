@@ -2,6 +2,7 @@ package dev.lazurite.quadz.client.mixin;
 
 import com.mojang.authlib.GameProfile;
 import dev.lazurite.quadz.client.extension.LocalPlayerExtension;
+import dev.lazurite.quadz.common.component.BindingComponent;
 import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.item.RemoteItem;
 import dev.lazurite.quadz.common.registry.item.QuadzDataComponentTypes;
@@ -50,9 +51,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements L
             this.quadz$activeQuadcopter = null;
         }
 
-        if (mainHandStack.getItem() instanceof RemoteItem && mainHandStack.has(QuadzDataComponentTypes.BINDING)) {
+        if (mainHandStack.getItem() instanceof RemoteItem) {
 
-            @Nullable UUID boundUUID = mainHandStack.get(QuadzDataComponentTypes.BINDING).boundUUID();
+            @Nullable UUID boundUUID = mainHandStack.getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).boundUUID();
             if (boundUUID != null) {
                 if (!(this.quadz$activeQuadcopter != null && this.quadz$activeQuadcopter.getUUID().equals(boundUUID))) {
                     Vec3 eyePos = this.getEyePosition();

@@ -1,8 +1,11 @@
 package dev.lazurite.quadz.client.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.quadz.client.QuadzClient;
 import dev.lazurite.quadz.client.render.RenderHooks;
+import dev.lazurite.quadz.common.entity.Quadcopter;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.GameRenderer;
@@ -15,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
-public class GameRendererMixin {
+public abstract class GameRendererMixin {
 
     @Inject(method = "renderLevel", at = @At("HEAD"))
     public void renderLevel$HEAD(DeltaTracker deltaTracker, CallbackInfo ci) {
@@ -44,10 +47,12 @@ public class GameRendererMixin {
         return RenderHooks.onMultiplyPitch(quaternion);
     }
 
-    @Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
-    private void renderItemInHand$HEAD(Camera camera, float f, Matrix4f matrix4f, CallbackInfo ci) {
-        if (QuadzClient.getQuadcopterFromCamera().isPresent()) {
-            ci.cancel();
+    @WrapMethod(
+            method = "renderItemInHand"
+    )
+    private void renderItemInHand$HEAD(Camera camera, float f, Matrix4f matrix4f, Operation<Void> original) {
+        if (!(camera.getEntity() instanceof Quadcopter)) {
+            original.call(camera, f, matrix4f);
         }
     }
 

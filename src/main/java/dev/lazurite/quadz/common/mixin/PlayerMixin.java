@@ -4,7 +4,10 @@ import dev.lazurite.quadz.common.entity.Quadcopter;
 import dev.lazurite.quadz.common.extension.PlayerExtension;
 import dev.lazurite.quadz.common.hooks.PlayerHooks;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -12,7 +15,11 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Map;
 
 @Mixin(Player.class)
-public class PlayerMixin implements PlayerExtension {
+public abstract class PlayerMixin extends LivingEntity implements PlayerExtension {
+
+    protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
+        super(entityType, level);
+    }
 
     @Override
     public float quadz$getJoystickValue(ResourceLocation axis) {

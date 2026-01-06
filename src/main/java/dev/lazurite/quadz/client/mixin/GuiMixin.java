@@ -1,5 +1,7 @@
 package dev.lazurite.quadz.client.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.quadz.client.QuadzClient;
 import net.minecraft.client.DeltaTracker;
@@ -11,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
-public class GuiMixin {
+public abstract class GuiMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render$TAIL(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
@@ -20,14 +22,22 @@ public class GuiMixin {
         );
     }
 
-    @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
-    private void renderCrosshair$HEAD(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        QuadzClient.getQuadcopterFromCamera().ifPresent(quadcopter -> ci.cancel());
+    @WrapMethod(
+            method = "renderCrosshair"
+    )
+    private void renderCrosshair$HEAD(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Operation<Void> original) {
+        if (QuadzClient.getQuadcopterFromCamera().isEmpty()) {
+            original.call(guiGraphics, deltaTracker);
+        }
     }
 
-    @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
-    public void renderExperienceBar$HEAD(GuiGraphics guiGraphics, int i, CallbackInfo ci) {
-        QuadzClient.getQuadcopterFromCamera().ifPresent(quadcopter -> ci.cancel());
+    @WrapMethod(
+            method = "renderExperienceBar"
+    )
+    public void renderExperienceBar$HEAD(GuiGraphics guiGraphics, int i, Operation<Void> original) {
+        if (QuadzClient.getQuadcopterFromCamera().isEmpty()) {
+            original.call(guiGraphics, i);
+        }
     }
 
 }

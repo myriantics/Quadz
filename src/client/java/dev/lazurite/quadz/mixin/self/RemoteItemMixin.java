@@ -2,7 +2,9 @@ package dev.lazurite.quadz.mixin.self;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.lazurite.quadz.component.BindingComponent;
+import dev.lazurite.quadz.control.QuadcopterInterface;
 import dev.lazurite.quadz.entity.quadcopter.Quadcopter;
+import dev.lazurite.quadz.extension.MinecraftExtension;
 import dev.lazurite.quadz.item.RemoteItem;
 import dev.lazurite.quadz.registry.item.QuadzDataComponentTypes;
 import net.minecraft.client.Minecraft;
@@ -36,18 +38,12 @@ public abstract class RemoteItemMixin extends Item {
     ) {
         if (player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).isBound() && player instanceof LocalPlayer) {
             Minecraft minecraft = Minecraft.getInstance();
+            QuadcopterInterface quadcopterInterface = ((MinecraftExtension) minecraft).quadz$getQuadcopterInterface();
 
-            switch (Minecraft.getInstance().getCameraEntity()) {
-                case LocalPlayer localPlayer -> {
-                    Quadcopter activeQuadcopter = localPlayer.quadz$getActiveQuadcopter();
-                    if (activeQuadcopter != null) {
-                        minecraft.setCameraEntity(activeQuadcopter);
-                    }
-                }
-                case Quadcopter quadcopter -> {
-                    minecraft.setCameraEntity(player);
-                }
-                case null, default -> {}
+            if (quadcopterInterface.isEnabled()) {
+                quadcopterInterface.disable();
+            } else {
+                quadcopterInterface.enable();
             }
         }
     }

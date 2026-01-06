@@ -5,6 +5,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.DispenserBlock;
 
 import java.util.Properties;
 
@@ -14,6 +15,7 @@ import java.util.Properties;
 public class GogglesItem extends Item implements Equipable {
     public GogglesItem(Properties properties) {
         super(properties);
+        DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
     @Override

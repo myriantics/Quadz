@@ -15,27 +15,37 @@ public final class QuadcopterInterface {
 
     private boolean enabled = false;
 
-    public void tick(Minecraft minecraft) {
-        if (!validate(minecraft)) {
+    public void tick() {
+        if (!validate()) {
             this.disable();
         }
 
-        this.controllerSim.tick(minecraft, this);
+        this.controllerSim.tick(minecraft(), this);
     }
 
     public boolean isEnabled() {
         return this.enabled;
     }
 
-    public void enable() {
+    public boolean enable() {
+        if (!this.validate()) {
+            return false;
+        }
+
         this.enabled = true;
+        minecraft().setCameraEntity(minecraft().player.quadz$getActiveQuadcopter());
+
+        return true;
     }
 
     public void disable() {
         this.enabled = false;
+        Minecraft.getInstance().setCameraEntity(Minecraft.getInstance().player);
     }
 
-    private boolean validate(Minecraft minecraft) {
+    private boolean validate() {
+        Minecraft minecraft = minecraft();
+
         // we have to be in a level to have the interface up
         if (minecraft.level == null) {
             return false;
@@ -69,5 +79,9 @@ public final class QuadcopterInterface {
 
         // if all the checks were passed we win
         return true;
+    }
+
+    private static Minecraft minecraft() {
+        return Minecraft.getInstance();
     }
 }

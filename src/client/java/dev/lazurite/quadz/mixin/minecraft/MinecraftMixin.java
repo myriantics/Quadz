@@ -42,7 +42,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
     )
     private void quadz$tickControllerSim(CallbackInfo ci) {
         if (this.quadz$quadcopterInterface.isEnabled()) {
-            this.quadz$quadcopterInterface.tick((Minecraft) (Object)this);
+            this.quadz$quadcopterInterface.tick();
         }
     }
 }

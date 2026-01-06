@@ -6,7 +6,8 @@
   "item.quadz.remote" : "Remote",
 
   "quadz.tooltip.component.binding.unbound": "Unbound",
-  "quadz.tooltip.component.binding.bound": "Bound to: %s",
+  "quadz.tooltip.component.binding.bound_advanced": "Bound to: %s",
+  "quadz.tooltip.component.binding.bound": "Bound",
 
   "quadz.message.entity_bound" : "%s Bound",
   "quadz.message.binding_cleared" : "Binding Cleared",

@@ -1,13 +1,10 @@
 package dev.lazurite.quadz.common.component;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.mojang.util.UUIDTypeAdapter;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.Item;
@@ -36,8 +33,13 @@ public record BindingComponent(UUID boundUUID) implements TooltipProvider {
     @Override
     public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         if (this.isBound()) {
-            consumer.accept(Component.translatable("quadz.tooltip.component.binding.bound", this.boundUUID()).withColor(CommonColors.LIGHT_GRAY));
+            if (tooltipFlag.isAdvanced()) {
+                consumer.accept(Component.translatable("quadz.tooltip.component.binding.bound_advanced", this.boundUUID()).withColor(CommonColors.LIGHT_GRAY));
+            } else {
+                consumer.accept(Component.translatable("quadz.tooltip.component.binding.bound").withColor(CommonColors.LIGHT_GRAY));
+            }
         } else {
+
             consumer.accept(Component.translatable("quadz.tooltip.component.binding.unbound").withColor(CommonColors.LIGHT_GRAY));
         }
     }

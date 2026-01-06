@@ -13,7 +13,7 @@ public record RequestPlayerViewC2SPacket() implements CustomPacketPayload {
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return null;
+        return TYPE;
     }
 
     public static final Type<RequestPlayerViewC2SPacket> TYPE = new Type<>(QuadzPackets.REQUEST_PLAYER_VIEW_C2S);

@@ -2,12 +2,15 @@ package dev.lazurite.quadz.render;
 
 import com.google.common.collect.Maps;
 import com.mojang.math.Axis;
+import dev.lazurite.quadz.control.QuadcopterInterface;
 import dev.lazurite.quadz.entity.quadcopter.Quadcopter;
+import dev.lazurite.quadz.extension.MinecraftExtension;
 import dev.lazurite.quadz.registry.QuadzEvents;
 import dev.lazurite.quadz.util.JoystickOutput;
 import dev.lazurite.quadz.Config;
 import dev.lazurite.quadz.QuadzClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -20,11 +23,13 @@ public class RenderHooks {
 
     public static void onRenderLevel(float tickDelta) {
         /* Rotate the player's yaw and pitch to follow the quadcopter */
-        var player = Minecraft.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
+        QuadcopterInterface quadcopterInterface = ((MinecraftExtension)Minecraft.getInstance()).quadz$getQuadcopterInterface();
 
-        if (Config.followLOS && player != null) {
+        if (Config.followLOS && quadcopterInterface.isEnabled()) {
             @Nullable Quadcopter activeQuadcopter = player.quadz$getActiveQuadcopter();
-            if (activeQuadcopter != null) {
+            // don't look at the quadcopter if it's the current camera
+            if (Minecraft.getInstance().getCameraEntity() != activeQuadcopter) {
                 if (player.hasLineOfSight(activeQuadcopter)) {
                     /* Get the difference in position between the player and the quadcopter */
                     var delta = Minecraft.getInstance().player.getEyePosition(tickDelta)

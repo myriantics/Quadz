@@ -11,6 +11,8 @@
 
   "quadz.message.entity_bound" : "%s Bound",
   "quadz.message.binding_cleared" : "Binding Cleared",
+  "quadz.message.interface_enabled": "Interface Enabled",
+  "quadz.message.interface_disabled": "Interface Disabled",
 
   "quadz.config.title" : "Quadz Config",
 

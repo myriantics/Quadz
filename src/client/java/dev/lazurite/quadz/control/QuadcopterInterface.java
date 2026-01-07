@@ -14,13 +14,33 @@ public final class QuadcopterInterface {
     private final ControllerSim controllerSim = new ControllerSim();
 
     private boolean enabled = false;
+    private boolean shouldAlterUI = false;
 
     public void tick() {
         if (!validate()) {
             this.disable();
         }
 
+        // we know player isn't null through the validation
+        LocalPlayer player = minecraft().player;
+
+        // no goggles equals no UI changes
+        ItemStack helmetStack = player.getItemBySlot(EquipmentSlot.HEAD);
+        if (this.shouldAlterUI != helmetStack.is(QuadzItemTags.QUADCOPTER_INTERFACE_HEADWEAR)) {
+            this.shouldAlterUI = helmetStack.is(QuadzItemTags.QUADCOPTER_INTERFACE_HEADWEAR);
+
+            if (this.shouldAlterUI) {
+                minecraft().setCameraEntity(player.quadz$getActiveQuadcopter());
+            } else {
+                minecraft().setCameraEntity(player);
+            }
+        }
+
         this.controllerSim.tick(minecraft(), this);
+    }
+
+    public boolean shouldAlterUI() {
+        return this.enabled && this.shouldAlterUI;
     }
 
     public boolean isEnabled() {
@@ -33,7 +53,6 @@ public final class QuadcopterInterface {
         }
 
         this.enabled = true;
-        minecraft().setCameraEntity(minecraft().player.quadz$getActiveQuadcopter());
 
         return true;
     }
@@ -61,12 +80,6 @@ public final class QuadcopterInterface {
         // no active quadcopter equals no interface
         @Nullable Quadcopter activeQuadcopter = player.quadz$getActiveQuadcopter();
         if (activeQuadcopter == null) {
-            return false;
-        }
-
-        // no goggles equals no interface
-        ItemStack helmetStack = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (!helmetStack.is(QuadzItemTags.QUADCOPTER_INTERFACE_HEADWEAR)) {
             return false;
         }
 

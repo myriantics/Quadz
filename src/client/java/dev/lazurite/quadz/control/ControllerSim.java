@@ -12,7 +12,7 @@ public class ControllerSim {
 
     public void tick(Minecraft minecraft, QuadcopterInterface quadcopterInterface) {
         Options options = minecraft.options;
-        if (minecraft.cameraEntity instanceof Quadcopter) {
+        if (quadcopterInterface.isEnabled()) {
             float upVal = options.keyJump.isDown() ? 1 : 0;
             float downVal = options.keyShift.isDown() ? -1 : 0;
             float forwardsVal = options.keyUp.isDown() ? 1 : 0;

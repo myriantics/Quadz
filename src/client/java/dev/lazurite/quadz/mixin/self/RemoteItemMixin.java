@@ -9,6 +9,7 @@ import dev.lazurite.quadz.item.RemoteItem;
 import dev.lazurite.quadz.registry.item.QuadzDataComponentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -36,14 +37,16 @@ public abstract class RemoteItemMixin extends Item {
             InteractionHand interactionHand,
             CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir
     ) {
-        if (player.getMainHandItem().getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).isBound() && player instanceof LocalPlayer) {
+        if (player.getItemInHand(interactionHand).getOrDefault(QuadzDataComponentTypes.BINDING, BindingComponent.UNBOUND).isBound() && player instanceof LocalPlayer) {
             Minecraft minecraft = Minecraft.getInstance();
             QuadcopterInterface quadcopterInterface = ((MinecraftExtension) minecraft).quadz$getQuadcopterInterface();
 
             if (quadcopterInterface.isEnabled()) {
                 quadcopterInterface.disable();
+                player.displayClientMessage(Component.translatable("quadz.message.interface_disabled"), true);
             } else {
                 quadcopterInterface.enable();
+                player.displayClientMessage(Component.translatable("quadz.message.interface_enabled"), true);
             }
         }
     }
